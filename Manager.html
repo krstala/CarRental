@@ -572,7 +572,7 @@ img{max-width:100%;display:block}input,textarea,select{outline:none;font-family:
 <script>
 // ── AUTH ──
 const staffUser = JSON.parse(sessionStorage.getItem('dave_staff_user') || localStorage.getItem('dave_admin_session') || 'null');
-if (!staffUser || staffUser.role !== 'manager') { window.location.href = 'Adminlogin.html'; }
+if (!staffUser || staffUser.role !== 'manager') { window.location.href = 'adminlogin.html'; }
 document.getElementById('mgrNameDisplay').textContent = (staffUser?.username || 'Manager').toUpperCase();
 
 function updateClock(){ document.getElementById('liveTime').textContent = new Date().toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit'}); }
