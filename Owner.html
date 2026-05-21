@@ -599,7 +599,7 @@ img{max-width:100%;display:block}input,textarea,select{outline:none;font-family:
 //  AUTH CHECK
 // ══════════════════════════════════════════
 const staffUser = JSON.parse(sessionStorage.getItem('dave_staff_user') || localStorage.getItem('dave_admin_session') || 'null');
-if (!staffUser) { window.location.href = 'Adminlogin.html'; }
+if (!staffUser) { window.location.href = 'adminlogin.html'; }
 const IS_OWNER = true; // this is Owner.html — always owner
 
 document.getElementById('ownerName').textContent = (staffUser?.username || 'Owner').toUpperCase();
