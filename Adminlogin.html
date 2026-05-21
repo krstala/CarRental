@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Staff Portal — Dave Car Rental</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--og:#FF6B00;--og2:#FF8500;--bk:#0D0D0D;--bk2:#141414;--bk3:#1C1C1C;--bk4:#242424;--wh:#fff;--wm:rgba(255,255,255,.5);--bor:rgba(255,255,255,.07);--bog:rgba(255,107,0,.25);--yw:#FFD600;--gr:#34C759;--rd:#FF3B30;--bl:#007AFF;--fd:'Bebas Neue',sans-serif;--fc:'Barlow Condensed',sans-serif;--fb:'Barlow',sans-serif;}
+body{font-family:var(--fb);background:var(--bk);color:var(--wh);min-height:100vh;display:flex;flex-direction:column}
+a{text-decoration:none;color:inherit}
+
+.portal-page{flex:1;display:grid;grid-template-columns:1fr 1fr;min-height:100vh}
+
+/* LEFT SIDE */
+.portal-left{background:var(--bk2);border-right:3px solid var(--og);display:flex;flex-direction:column;justify-content:center;padding:60px 56px;position:relative;overflow:hidden}
+.pl-bg{position:absolute;inset:0;background:repeating-linear-gradient(-55deg,transparent,transparent 48px,rgba(255,107,0,.018) 48px,rgba(255,107,0,.018) 50px)}
+.pl-glow{position:absolute;bottom:-100px;left:-80px;width:500px;height:500px;background:radial-gradient(circle,rgba(255,107,0,.09) 0%,transparent 65%)}
+.pl-content{position:relative;z-index:1}
+
+.pl-logo{display:flex;align-items:center;gap:13px;margin-bottom:52px}
+.pl-logo-circle{width:52px;height:52px;border-radius:50%;background:var(--og);border:2px solid var(--og);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:1.8rem;color:var(--bk);box-shadow:0 0 20px rgba(255,107,0,.4)}
+.pl-logo-text .main{font-family:var(--fd);font-size:1.5rem;color:var(--og);letter-spacing:.05em;display:block}
+.pl-logo-text .sub{font-family:var(--fc);font-size:.56rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.3);display:block;margin-top:1px}
+
+.portal-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,107,0,.1);border:1px solid rgba(255,107,0,.3);border-radius:4px;padding:6px 14px;margin-bottom:18px;font-family:var(--fc);font-size:.7rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--og)}
+.shield-icon{font-size:1rem}
+
+.pl-title{font-family:var(--fd);font-size:clamp(2.8rem,5vw,4.5rem);line-height:.88;margin-bottom:14px}
+.pl-title em{color:var(--og);font-style:normal}
+.pl-desc{font-size:.92rem;color:var(--wm);line-height:1.75;max-width:340px;margin-bottom:36px}
+
+.role-cards{display:flex;flex-direction:column;gap:11px}
+.role-card{display:flex;align-items:center;gap:14px;background:var(--bk3);border:1px solid var(--bor);border-radius:10px;padding:14px 18px;transition:border-color .2s}
+.role-card:hover{border-color:var(--bog)}
+.rc-icon{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.rc-owner{background:rgba(255,215,0,.12);border:1px solid rgba(255,215,0,.2)}
+.rc-mgr{background:rgba(255,107,0,.12);border:1px solid rgba(255,107,0,.2)}
+.rc-drv{background:rgba(52,199,89,.1);border:1px solid rgba(52,199,89,.18)}
+.rc-info{}
+.rc-title{font-family:var(--fc);font-size:.85rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;display:block}
+.rc-desc{font-size:.72rem;color:var(--wm);margin-top:2px}
+
+.pl-note{margin-top:28px;font-size:.76rem;color:rgba(255,255,255,.22);line-height:1.65}
+.pl-car{position:absolute;bottom:-20px;right:-20px;font-size:9rem;opacity:.04;pointer-events:none}
+
+/* RIGHT SIDE */
+.portal-right{background:var(--bk);display:flex;align-items:center;justify-content:center;padding:48px 56px}
+.portal-form-wrap{width:100%;max-width:420px}
+
+.back-link{display:inline-flex;align-items:center;gap:6px;font-family:var(--fc);font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:32px;transition:color .2s}
+.back-link:hover{color:var(--og)}
+
+.form-title{font-family:var(--fd);font-size:2.8rem;letter-spacing:.02em;margin-bottom:4px}
+.form-sub{font-size:.88rem;color:var(--wm);margin-bottom:30px;line-height:1.6}
+
+/* ROLE SELECTOR TABS */
+.role-tabs{display:flex;background:var(--bk3);border-radius:10px;padding:4px;margin-bottom:26px;border:1px solid rgba(255,255,255,.06)}
+.rtab{flex:1;padding:10px 6px;border-radius:7px;text-align:center;cursor:pointer;font-family:var(--fc);font-size:.78rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.3);transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:3px}
+.rtab .ti{font-size:1.1rem}
+.rtab.on{background:var(--og);color:var(--bk)}
+.rtab.on-yw{background:var(--yw);color:var(--bk)}
+.rtab.on-gr{background:var(--gr);color:var(--bk)}
+
+.err-box{display:none;background:rgba(255,59,48,.08);border:1px solid rgba(255,59,48,.22);border-radius:8px;padding:10px 13px;font-size:.8rem;color:#ff7070;margin-bottom:12px}
+.err-box.on{display:block}
+
+.form-stack{display:flex;flex-direction:column;gap:13px}
+.field label{font-family:var(--fc);font-size:.64rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35);display:block;margin-bottom:5px}
+.fi{width:100%;background:var(--bk3);border:1.5px solid rgba(255,255,255,.08);border-radius:9px;color:var(--wh);padding:12px 14px;font-family:var(--fb);font-size:.9rem;outline:none;transition:all .2s}
+.fi:focus{border-color:var(--og);box-shadow:0 0 0 3px rgba(255,107,0,.1)}
+.pw-wrap{position:relative}
+.pw-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(255,255,255,.26);cursor:pointer;font-size:.88rem;padding:2px;transition:color .2s}
+.pw-eye:hover{color:var(--wh)}
+
+/* SECURITY KEY */
+.sk-field{background:rgba(255,215,0,.06);border:1.5px solid rgba(255,215,0,.2);border-radius:9px;padding:13px 14px;position:relative}
+.sk-field input{background:transparent;border:none;color:var(--yw);width:100%;font-family:var(--fb);font-size:.9rem;outline:none;letter-spacing:.08em}
+.sk-label{font-family:var(--fc);font-size:.62rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,215,0,.55);display:block;margin-bottom:4px}
+
+/* ATTEMPT DOTS */
+.attempt-row{display:flex;align-items:center;gap:8px;margin-top:4px;font-size:.72rem;color:rgba(255,255,255,.3)}
+.adot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.1);transition:background .2s}
+.adot.used{background:var(--rd)}
+
+.btn-login{width:100%;border:none;padding:14px;border-radius:10px;font-family:var(--fc);font-size:1rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:9px;margin-top:4px}
+.btn-og-full{background:var(--og);color:var(--bk)}.btn-og-full:hover{background:var(--og2);transform:translateY(-1px);box-shadow:0 8px 24px rgba(255,107,0,.3)}
+.btn-yw-full{background:var(--yw);color:var(--bk)}.btn-yw-full:hover{background:#e6c100;transform:translateY(-1px)}
+.btn-gr-full{background:var(--gr);color:var(--bk)}.btn-gr-full:hover{background:#28a84b;transform:translateY(-1px)}
+.btn-login:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.spin{display:none;width:15px;height:15px;border:2px solid rgba(0,0,0,.2);border-top-color:var(--bk);border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.lock-banner{display:none;background:rgba(255,59,48,.07);border:1px solid rgba(255,59,48,.22);border-radius:10px;padding:16px 18px;text-align:center;margin-top:12px}
+.lock-banner.on{display:block}
+.lock-banner h4{font-family:var(--fc);font-size:.9rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--rd);margin-bottom:6px}
+.lock-countdown{font-family:var(--fd);font-size:1.8rem;color:var(--rd);letter-spacing:.06em}
+.lock-banner p{font-size:.76rem;color:rgba(255,255,255,.38);margin-top:6px}
+
+.demo-hint{background:rgba(255,107,0,.06);border:1px solid rgba(255,107,0,.14);border-radius:8px;padding:11px 14px;font-size:.76rem;color:rgba(255,255,255,.38);line-height:1.65;margin-top:14px}
+.demo-hint strong{color:var(--og)}
+
+.cust-link{text-align:center;margin-top:20px;font-size:.8rem;color:rgba(255,255,255,.28)}
+.cust-link a{color:var(--og);font-weight:700}
+
+/* SUCCESS OVERLAY */
+.success-overlay{display:none;position:fixed;inset:0;background:var(--bk);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:14px;text-align:center}
+.success-overlay.on{display:flex;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.so-icon{font-size:4.5rem;animation:bIn .5s ease}
+@keyframes bIn{0%{transform:scale(0)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+.so-title{font-family:var(--fd);font-size:2.4rem;letter-spacing:.02em}
+.so-sub{font-size:.9rem;color:var(--wm)}
+
+@media(max-width:860px){.portal-page{grid-template-columns:1fr}.portal-left{display:none}.portal-right{padding:40px 24px}}
+</style>
+</head>
+
+// this part starts with idk dont mind this text comments cus iths
+
+<body>
+
+<div class="success-overlay" id="successOverlay">
+  <span class="so-icon">🔓</span>
+  <h2 class="so-title">ACCESS GRANTED</h2>
+  <p class="so-sub" id="soSub">Redirecting to dashboard...</p>
+</div>
+
+<div class="portal-page">
+  <!-- LEFT -->
+  <div class="portal-left">
+    <div class="pl-bg"></div>
+    <div class="pl-glow"></div>
+    <div class="pl-content">
+      <div class="pl-logo">
+        <div class="pl-logo-circle">D</div>
+        <div class="pl-logo-text">
+          <span class="main">DAVE</span>
+          <span class="sub">Car Rental Services</span>
+        </div>
+      </div>
+      <div class="portal-badge"><span class="shield-icon">🛡️</span> Restricted Staff Access</div>
+      <h2 class="pl-title">STAFF<br><em>PORTAL</em></h2>
+      <p class="pl-desc">Secure login for authorized personnel only. All login attempts are monitored and logged. Choose your role to continue.</p>
+      <div class="role-cards">
+        <div class="role-card">
+          <div class="rc-icon rc-owner">👑</div>
+          <div class="rc-info">
+            <span class="rc-title">Owner</span>
+            <span class="rc-desc">Full system access · All data · Financial reports · Settings</span>
+          </div>
+        </div>
+        <div class="role-card">
+          <div class="rc-icon rc-mgr">📋</div>
+          <div class="rc-info">
+            <span class="rc-title">Manager</span>
+            <span class="rc-desc">Manage bookings · Assign drivers · Send promos · Customer emails</span>
+          </div>
+        </div>
+        <div class="role-card">
+          <div class="rc-icon rc-drv">🚗</div>
+          <div class="rc-info">
+            <span class="rc-title">Driver</span>
+            <span class="rc-desc">View assigned trips · Update trip status · On-duty schedule</span>
+          </div>
+        </div>
+      </div>
+      <p class="pl-note">⚠️ Unauthorized access attempts are recorded and reported to management.</p>
+    </div>
+    <div class="pl-car">🚗</div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="portal-right">
+    <div class="portal-form-wrap">
+      <a href="../index.html" class="back-link">← Back to Website</a>
+      <h1 class="form-title">SIGN IN</h1>
+      <p class="form-sub">Select your role and enter your credentials to access the staff dashboard.</p>
+
+      <!-- ROLE TABS -->
+      <div class="role-tabs">
+        <div class="rtab on-yw on" onclick="selRole('owner',this)" id="rtOwner"><span class="ti">👑</span>Owner</div>
+        <div class="rtab" onclick="selRole('manager',this)" id="rtManager"><span class="ti">📋</span>Manager</div>
+        <div class="rtab" onclick="selRole('driver',this)" id="rtDriver"><span class="ti">🚗</span>Driver</div>
+      </div>
+
+      <div class="err-box" id="errBox">⚠️ <span id="errTxt">Incorrect credentials.</span></div>
+
+      <!-- FORM -->
+      <div class="form-stack">
+        <div class="field">
+          <label>Username / Email</label>
+          <input type="text" class="fi" id="loginUser" placeholder="Enter your username" autocomplete="off">
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <div class="pw-wrap">
+            <input type="password" class="fi" id="loginPass" placeholder="Enter your password" autocomplete="off">
+            <button class="pw-eye" onclick="togPw('loginPass',this)" type="button">👁️</button>
+          </div>
+        </div>
+
+        <!-- OWNER ONLY: Security Key -->
+        <div class="field" id="skField" style="">
+          <label>🔑 Owner Security Key</label>
+          <div class="sk-field">
+            <span class="sk-label">Required for Owner Access</span>
+            <div class="pw-wrap" style="position:relative">
+              <input type="password" id="secKey" placeholder="Enter security key..." autocomplete="off" style="background:transparent;border:none;color:var(--yw);width:100%;font-family:var(--fb);font-size:.9rem;outline:none;letter-spacing:.06em;padding:0">
+            </div>
+          </div>
+        </div>
+
+        <!-- ATTEMPT DOTS -->
+        <div class="attempt-row">
+          <span>Attempts:</span>
+          <div class="adot" id="ad1"></div>
+          <div class="adot" id="ad2"></div>
+          <div class="adot" id="ad3"></div>
+          <div class="adot" id="ad4"></div>
+          <div class="adot" id="ad5"></div>
+        </div>
+
+        <button class="btn-login btn-yw-full" id="loginBtn" onclick="doLogin()">
+          <span id="loginBtnTxt">Sign In as Owner</span>
+          <div class="spin" id="loginSpin"></div>
+        </button>
+
+        <div class="lock-banner" id="lockBanner">
+          <h4>🔒 Account Temporarily Locked</h4>
+          <div class="lock-countdown" id="lockCountdown">0:30</div>
+          <p>Too many failed attempts. Please wait before trying again.</p>
+        </div>
+
+        <div class="demo-hint">
+          <strong>Demo Credentials:</strong><br>
+          👑 Owner — user: <strong>owner</strong> · pass: <strong>dave2025</strong> · key: <strong>DAVE-OWNER-KEY</strong><br>
+          📋 Manager — user: <strong>manager</strong> · pass: <strong>manager123</strong><br>
+          🚗 Driver — user: <strong>driver1</strong> · pass: <strong>driver123</strong>
+        </div>
+
+        <div class="cust-link">Customer? <a href="../index.html">Go to Homepage →</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── ROLE CREDENTIALS ──
+const CREDS = {
+  owner:   { user:'owner',   pass:'dave2025',    key:'DAVE-OWNER-KEY', label:'Owner',   icon:'👑', redirect:'Owner.html' },
+  manager: { user:'manager', pass:'manager123',  key:null,             label:'Manager', icon:'📋', redirect:'Manager.html' },
+  driver:  { user:'driver1', pass:'driver123',   key:null,             label:'Driver',  icon:'🚗', redirect:'Driver.html' },
+};
+const COLORS = { owner:'btn-yw-full', manager:'btn-og-full', driver:'btn-gr-full' };
+const BTN_LABELS = { owner:'Sign In as Owner', manager:'Sign In as Manager', driver:'Sign In as Driver' };
+
+let curRole = 'owner';
+let attempts = 0;
+const MAX_ATT = 5;
+const LOCK_SECS = 30;
+let locked = false, lockTimer = null;
+
+function selRole(role, el) {
+  curRole = role;
+  document.querySelectorAll('.rtab').forEach(t => t.classList.remove('on','on-yw','on-gr','on-og'));
+  const classMap = { owner:'on-yw', manager:'on-og', driver:'on-gr' };
+  el.classList.add('on', classMap[role]);
+
+  // Update button
+  const btn = document.getElementById('loginBtn');
+  btn.className = 'btn-login ' + COLORS[role];
+  document.getElementById('loginBtnTxt').textContent = BTN_LABELS[role];
+
+  // Show/hide security key
+  document.getElementById('skField').style.display = role === 'owner' ? 'block' : 'none';
+  hideErr();
+}
+
+function togPw(id, btn) {
+  const el = document.getElementById(id);
+  el.type = el.type === 'password' ? 'text' : 'password';
+  btn.textContent = el.type === 'password' ? '👁️' : '🙈';
+}
+
+function showErr(msg) {
+  document.getElementById('errTxt').textContent = msg;
+  document.getElementById('errBox').classList.add('on');
+}
+function hideErr() { document.getElementById('errBox').classList.remove('on'); }
+
+function updateDots() {
+  for (let i = 1; i <= 5; i++) {
+    document.getElementById('ad' + i).classList.toggle('used', i <= attempts);
+  }
+}
+
+function startLockout() {
+  locked = true;
+  let secs = LOCK_SECS;
+  const banner = document.getElementById('lockBanner');
+  const countdown = document.getElementById('lockCountdown');
+  const btn = document.getElementById('loginBtn');
+  banner.classList.add('on');
+  btn.disabled = true;
+  hideErr();
+
+  lockTimer = setInterval(() => {
+    secs--;
+    const m = Math.floor(secs / 60), s = secs % 60;
+    countdown.textContent = m + ':' + String(s).padStart(2, '0');
+    if (secs <= 0) {
+      clearInterval(lockTimer);
+      locked = false; attempts = 0;
+      banner.classList.remove('on');
+      btn.disabled = false;
+      updateDots();
+    }
+  }, 1000);
+}
+
+function doLogin() {
+  if (locked) return;
+  hideErr();
+  const user = document.getElementById('loginUser').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const key = document.getElementById('secKey').value.trim();
+  const cred = CREDS[curRole];
+
+  if (!user || !pass) { showErr('Please enter username and password.'); return; }
+
+  const btn = document.getElementById('loginBtn');
+  const spin = document.getElementById('loginSpin');
+  btn.disabled = true;
+  document.getElementById('loginBtnTxt').style.display = 'none';
+  spin.style.display = 'block';
+
+  // Simulate server check
+  setTimeout(() => {
+    btn.disabled = false;
+    document.getElementById('loginBtnTxt').style.display = 'block';
+    spin.style.display = 'none';
+
+    const validCreds = user === cred.user && pass === cred.pass;
+    const validKey = curRole !== 'owner' || key === cred.key;
+
+    if (validCreds && validKey) {
+      // SUCCESS
+      sessionStorage.setItem('dave_staff_role', curRole);
+      sessionStorage.setItem('dave_staff_user', JSON.stringify({ role: curRole, username: user, label: cred.label, icon: cred.icon, loginTime: new Date().toISOString() }));
+
+      const overlay = document.getElementById('successOverlay');
+      document.getElementById('soSub').textContent = 'Welcome, ' + cred.label + '! Redirecting...';
+      overlay.classList.add('on');
+      setTimeout(() => window.location.href = cred.redirect, 1600);
+    } else {
+      attempts++;
+      updateDots();
+      document.getElementById('loginUser').value = '';
+      document.getElementById('loginPass').value = '';
+      document.getElementById('secKey').value = '';
+
+      if (attempts >= MAX_ATT) {
+        startLockout();
+      } else {
+        const rem = MAX_ATT - attempts;
+        const keyMsg = curRole === 'owner' && validCreds && !validKey ? ' (Incorrect security key)' : '';
+        showErr(`Incorrect credentials${keyMsg}. ${rem} attempt${rem !== 1 ? 's' : ''} remaining.`);
+
+        // Shake
+        const wrap = document.querySelector('.portal-form-wrap');
+        wrap.style.animation = 'none'; void wrap.offsetWidth;
+        wrap.style.animation = 'shake .35s ease';
+      }
+    }
+  }, 900);
+}
+
+// Allow Enter key
+document.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+// Init
+document.getElementById('skField').style.display = 'block'; // owner is default
+
+// Add shake animation
+const style = document.createElement('style');
+style.textContent = `@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}`;
+document.head.appendChild(style);
+</script>
+</body>
+</html>

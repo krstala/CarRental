@@ -1,0 +1,116 @@
+
+<div class="hero-visual">
+  <div class="hero-car-wrap">
+
+    <!-- Float card (top right) — dynamically filled by JS -->
+    <div class="float-card float-card-1" id="heroFloatCard">
+      <span class="fc-emoji" id="heroFloatEmoji">🚗</span>
+      <div>
+        <div class="fc-name" id="heroFloatName">Loading...</div>
+        <div class="fc-sub" id="heroFloatSub">— seats · A/T</div>
+      </div>
+      <div class="fc-price" id="heroFloatPrice">₱—</div>
+    </div>
+
+    <!-- Main car display: real image if available, emoji fallback -->
+    <div id="heroCarDisplay" style="position:relative;z-index:2;display:flex;align-items:center;justify-content:center;width:100%;height:260px">
+      <!-- JS will inject either <img> or emoji here -->
+      <span class="big-car-emoji" id="heroCarEmoji">🚗</span>
+    </div>
+
+    <div class="road"></div>
+
+    <!-- Stat pill -->
+    <div class="stat-pill sp1">
+      <div class="sp-num">500+</div>
+      <div class="sp-lbl">Happy Clients</div>
+    </div>
+
+  </div>
+</div>
+
+
+<!--
+STEP 3 — Add this script block INSIDE your existing <script> tag
+at the bottom of index.html (after the existing JS, before </script>):
+-->
+<script>
+// ── UPDATE HERO CAR FROM ADMIN DATA ──
+(function updateHeroCar() {
+  const heroCar = window.getDaveHeroCar ? window.getDaveHeroCar() : null;
+  if (!heroCar) return;
+
+  // Float card
+  document.getElementById('heroFloatName').textContent = heroCar.name;
+  document.getElementById('heroFloatSub').textContent = heroCar.seats + ' Seats · ' + heroCar.transmission;
+  document.getElementById('heroFloatPrice').innerHTML = '₱' + Number(heroCar.price6hr).toLocaleString() + '<small style="font-size:.65rem;color:var(--wm)">/6hr</small>';
+
+  // Hero car display
+  const display = document.getElementById('heroCarDisplay');
+  if (heroCar.image) {
+    display.innerHTML = `
+      <img
+        src="${heroCar.image}"
+        alt="${heroCar.name}"
+        style="
+          max-height:240px;
+          max-width:480px;
+          width:100%;
+          object-fit:contain;
+          filter:drop-shadow(0 20px 60px rgba(255,107,0,.25));
+          animation:carFloat 3s ease-in-out infinite;
+          position:relative;
+          z-index:2;
+        "
+      >`;
+  } else {
+    // Fallback emoji
+    document.getElementById('heroCarEmoji').textContent = heroCar.emoji || '🚗';
+  }
+
+  // Also update the float card emoji
+  if (heroCar.image) {
+    document.getElementById('heroFloatEmoji').innerHTML = `<img src="${heroCar.image}" style="width:36px;height:36px;object-fit:cover;border-radius:6px" alt="">`;
+  }
+})();
+
+// ── OWNER PHOTO IN ABOUT SECTION (if about section has #ownerPhoto element) ──
+(function updateOwnerPhoto() {
+  const owner = window.getDaveOwnerInfo ? window.getDaveOwnerInfo() : null;
+  if (!owner) return;
+  const ownerImg = document.getElementById('ownerPhoto');
+  if (ownerImg && owner.photo) {
+    ownerImg.src = owner.photo;
+    ownerImg.style.display = 'block';
+  }
+  const ownerNameEl = document.getElementById('ownerName');
+  if (ownerNameEl && owner.name) ownerNameEl.textContent = owner.name;
+})();
+</script>
+
+
+<!--
+STEP 4 — Add an owner photo spot in your About section.
+Find the about-cards section and add this card, or add it to the 
+existing contact card that has the owner info.
+
+Replace the about-section's left column image placeholder with:
+-->
+<div id="ownerPhotoCard" style="
+  width:160px;height:160px;
+  border-radius:50%;
+  background:var(--bk3);
+  border:4px solid var(--bor-og);
+  overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  font-size:4rem;
+  margin:0 auto 20px;
+  box-shadow:0 8px 32px rgba(255,107,0,.2);
+">
+  <img id="ownerPhoto" src="" alt="Dave" style="width:100%;height:100%;object-fit:cover;display:none">
+  <span id="ownerPhotoFallback">👤</span>
+</div>
+<div style="text-align:center;margin-bottom:24px">
+  <div id="ownerName" style="font-family:var(--fd);font-size:1.6rem;letter-spacing:.04em;color:var(--og)">David Esmino</div>
+  <div style="font-family:var(--fc);font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-top:3px">Owner / Founder</div>
+</div>

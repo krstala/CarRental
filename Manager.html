@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manager Panel — Dave Car Rental</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --og:#FF6B00;--og2:#FF8A1F;--bk:#0A0A0A;--bk2:#111111;--bk3:#1C1C1C;--bk4:#2A2A2A;--bk5:#333;
+  --wh:#FFFFFF;--wm:rgba(255,255,255,.6);--wd:rgba(255,255,255,.06);
+  --bor:rgba(255,255,255,.10);--bor-og:rgba(255,107,0,.28);
+  --green:#34C759;--red:#FF3B30;--blue:#007AFF;--yellow:#FFD700;--purple:#AF52DE;--teal:#5AC8FA;
+  --fd:'Bebas Neue',sans-serif;--fc:'Barlow Condensed',sans-serif;--fb:'Barlow',sans-serif;
+  --r:12px;--rs:8px;--sh:0 8px 32px rgba(0,0,0,.5);--sidebar:240px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--fb);background:var(--bk);color:var(--wh);display:flex;min-height:100vh}
+a{text-decoration:none;color:inherit}button{cursor:pointer;font-family:var(--fb)}
+img{max-width:100%;display:block}input,textarea,select{outline:none;font-family:var(--fb)}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar);min-height:100vh;background:var(--bk2);border-right:1px solid rgba(0,122,255,.25);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100}
+.sidebar-brand{padding:20px 16px;border-bottom:1px solid var(--bor)}
+.brand-logo{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.brand-icon{width:34px;height:34px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:1rem;color:var(--wh);flex-shrink:0}
+.brand-name{font-family:var(--fd);font-size:1.2rem;color:var(--blue);letter-spacing:.04em}
+.brand-sub{font-family:var(--fc);font-size:.58rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.25)}
+.mgr-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(0,122,255,.12);border:1px solid rgba(0,122,255,.28);border-radius:100px;padding:3px 10px;margin-top:6px}
+.mgr-dot{width:6px;height:6px;background:var(--blue);border-radius:50%;animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,122,255,.5)}50%{box-shadow:0 0 0 5px rgba(0,122,255,0)}}
+.mgr-badge span{font-family:var(--fc);font-size:.62rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--blue)}
+.sidebar-nav{flex:1;padding:14px 10px;display:flex;flex-direction:column;gap:3px;overflow-y:auto}
+.nav-section-label{font-family:var(--fc);font-size:.6rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.2);padding:8px 8px 5px;margin-top:4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--rs);font-family:var(--fc);font-size:.88rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:rgba(255,255,255,.45);cursor:pointer;transition:all .18s;border:1px solid transparent;background:none;width:100%;text-align:left}
+.nav-item:hover{background:var(--wd);color:var(--wh)}
+.nav-item.active{background:rgba(0,122,255,.12);border-color:rgba(0,122,255,.28);color:var(--blue)}
+.nav-icon{font-size:1rem;flex-shrink:0}
+.nav-count{margin-left:auto;font-family:var(--fc);font-size:.6rem;font-weight:800;padding:2px 7px;border-radius:100px;min-width:18px;text-align:center}
+.nc-og{background:var(--og);color:var(--bk)}.nc-red{background:var(--red);color:#fff}.nc-green{background:var(--green);color:var(--bk)}.nc-yellow{background:var(--yellow);color:var(--bk)}.nc-purple{background:var(--purple);color:#fff}.nc-blue{background:var(--blue);color:#fff}.nc-teal{background:var(--teal);color:var(--bk)}
+.sidebar-footer{padding:12px 10px;border-top:1px solid var(--bor)}
+.admin-user{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bk3);border-radius:var(--rs);margin-bottom:8px}
+.admin-avatar{width:30px;height:30px;background:var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.9rem;color:var(--wh);flex-shrink:0}
+.admin-info strong{display:block;font-family:var(--fc);font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.admin-info small{font-size:.66rem;color:var(--wm)}
+.btn-logout{width:100%;background:rgba(255,59,48,.1);border:1px solid rgba(255,59,48,.2);border-radius:var(--rs);padding:9px;font-family:var(--fc);font-size:.76rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#ff6b6b;transition:all .18s}
+.btn-logout:hover{background:rgba(255,59,48,.2)}
+
+/* MAIN */
+.main-content{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:var(--bk2);border-bottom:1px solid rgba(0,122,255,.18);padding:0 26px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.topbar-left h1{font-family:var(--fd);font-size:1.5rem;letter-spacing:.04em}
+.topbar-left span{font-family:var(--fc);font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--wm);margin-left:10px}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.topbar-time{font-family:var(--fc);font-size:.78rem;font-weight:700;letter-spacing:.06em;color:rgba(255,255,255,.3)}
+.btn-view-site{display:inline-flex;align-items:center;gap:6px;font-family:var(--fc);font-size:.76rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--wh);background:var(--bk4);border:1px solid var(--bor);border-radius:var(--rs);padding:7px 14px;transition:all .18s;text-decoration:none}
+.btn-view-site:hover{border-color:var(--blue);color:var(--blue)}
+
+/* PANELS */
+.panel{display:none;padding:26px;animation:fadeIn .3s ease}
+.panel.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.stat-card{background:var(--bk2);border:1px solid var(--bor);border-radius:var(--r);padding:18px;transition:border-color .2s}
+.stat-card:hover{border-color:rgba(0,122,255,.28)}
+.stat-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.stat-icon{font-size:1.4rem}
+.stat-badge{font-family:var(--fc);font-size:.58rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:4px}
+.sb-og{background:rgba(255,107,0,.12);color:var(--og);border:1px solid var(--bor-og)}
+.sb-green{background:rgba(52,199,89,.12);color:var(--green);border:1px solid rgba(52,199,89,.2)}
+.sb-blue{background:rgba(0,122,255,.12);color:var(--blue);border:1px solid rgba(0,122,255,.2)}
+.sb-yellow{background:rgba(255,215,0,.12);color:var(--yellow);border:1px solid rgba(255,215,0,.2)}
+.sb-purple{background:rgba(175,82,222,.12);color:var(--purple);border:1px solid rgba(175,82,222,.2)}
+.sb-teal{background:rgba(90,200,250,.12);color:var(--teal);border:1px solid rgba(90,200,250,.2)}
+.stat-num{font-family:var(--fd);font-size:2rem;color:var(--wh);line-height:1}
+.stat-lbl{font-family:var(--fc);font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--wm);margin-top:3px}
+
+/* PANEL HEADERS */
+.panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.panel-header h2{font-family:var(--fd);font-size:1.5rem;letter-spacing:.04em}
+.panel-header h2 span{color:var(--blue)}
+.panel-sub{font-family:var(--fc);font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--wm);margin-top:2px}
+
+/* BUTTONS */
+.btn-blue{display:inline-flex;align-items:center;gap:7px;background:var(--blue);border:none;border-radius:var(--rs);padding:9px 18px;font-family:var(--fc);font-size:.85rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--wh);transition:all .18s}
+.btn-blue:hover{background:#0066dd;box-shadow:0 6px 20px rgba(0,122,255,.3);transform:translateY(-1px)}
+.btn-og{display:inline-flex;align-items:center;gap:7px;background:var(--og);border:none;border-radius:var(--rs);padding:9px 18px;font-family:var(--fc);font-size:.85rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--bk);transition:all .18s}
+.btn-og:hover{background:var(--og2)}
+.btn-ghost{display:inline-flex;align-items:center;gap:6px;background:none;border:1px solid var(--bor);border-radius:var(--rs);padding:8px 14px;font-family:var(--fc);font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--wm);transition:all .18s}
+.btn-ghost:hover{border-color:var(--blue);color:var(--blue)}
+.btn-red{display:inline-flex;align-items:center;gap:5px;background:rgba(255,59,48,.1);border:1px solid rgba(255,59,48,.2);border-radius:var(--rs);padding:6px 12px;font-family:var(--fc);font-size:.74rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#ff6b6b;transition:all .18s}
+.btn-red:hover{background:rgba(255,59,48,.2)}
+.btn-green{display:inline-flex;align-items:center;gap:5px;background:rgba(52,199,89,.1);border:1px solid rgba(52,199,89,.2);border-radius:var(--rs);padding:6px 12px;font-family:var(--fc);font-size:.74rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--green);transition:all .18s}
+.btn-green:hover{background:rgba(52,199,89,.2)}
+.btn-teal{display:inline-flex;align-items:center;gap:5px;background:rgba(90,200,250,.1);border:1px solid rgba(90,200,250,.2);border-radius:var(--rs);padding:6px 12px;font-family:var(--fc);font-size:.74rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);transition:all .18s}
+.btn-teal:hover{background:rgba(90,200,250,.2)}
+
+/* TABLES */
+.table-wrap{background:var(--bk2);border:1px solid var(--bor);border-radius:var(--r);overflow:hidden}
+.data-table{width:100%;border-collapse:collapse}
+.data-table th{background:var(--bk3);padding:11px 14px;font-family:var(--fc);font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35);text-align:left;border-bottom:1px solid var(--bor)}
+.data-table td{padding:13px 14px;font-size:.86rem;color:var(--wm);border-bottom:1px solid var(--bor);vertical-align:middle}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:rgba(255,255,255,.02)}
+.status-badge{font-family:var(--fc);font-size:.63rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:4px;white-space:nowrap}
+.s-pending{background:rgba(255,215,0,.1);color:var(--yellow);border:1px solid rgba(255,215,0,.2)}
+.s-confirmed{background:rgba(52,199,89,.1);color:var(--green);border:1px solid rgba(52,199,89,.2)}
+.s-cancelled{background:rgba(255,59,48,.1);color:#ff6b6b;border:1px solid rgba(255,59,48,.2)}
+.s-completed{background:rgba(0,122,255,.1);color:var(--blue);border:1px solid rgba(0,122,255,.2)}
+.s-extended{background:rgba(90,200,250,.1);color:var(--teal);border:1px solid rgba(90,200,250,.2)}
+
+/* FLEET GRID */
+.fleet-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.car-card{background:var(--bk2);border:1px solid var(--bor);border-radius:var(--r);overflow:hidden;transition:all .2s}
+.car-card:hover{border-color:rgba(0,122,255,.28)}
+.car-img{height:150px;background:var(--bk4);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:3.5rem}
+.car-img img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.car-img-badge{position:absolute;top:9px;left:9px;font-family:var(--fc);font-size:.58rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:4px;background:var(--og);color:var(--bk);z-index:2}
+.car-avail{position:absolute;top:9px;right:9px;font-family:var(--fc);font-size:.58rem;font-weight:800;padding:3px 8px;border-radius:20px;z-index:2}
+.car-avail.yes{background:rgba(52,199,89,.15);color:var(--green);border:1px solid rgba(52,199,89,.25)}
+.car-avail.no{background:rgba(255,59,48,.12);color:#ff6b6b;border:1px solid rgba(255,59,48,.2)}
+.car-body{padding:13px}
+.car-name{font-family:var(--fc);font-size:.92rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}
+.car-type{font-size:.72rem;color:var(--wm);margin-bottom:9px}
+.car-prices{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:10px}
+.cp{background:var(--bk4);border:1px solid var(--bor);border-radius:6px;padding:5px 3px;text-align:center}
+.cp-l{font-family:var(--fc);font-size:.5rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.25);display:block;margin-bottom:2px}
+.cp-v{font-family:var(--fc);font-size:.8rem;font-weight:800;color:var(--og)}
+.car-actions{display:flex;gap:7px}
+
+/* EMPLOYEE GRID */
+.emp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.emp-card{background:var(--bk2);border:1px solid var(--bor);border-radius:var(--r);padding:18px;transition:all .2s;position:relative}
+.emp-card:hover{border-color:rgba(0,122,255,.28)}
+.emp-avatar{width:52px;height:52px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:1.5rem;color:var(--wh);margin-bottom:12px;overflow:hidden;flex-shrink:0}
+.emp-avatar img{width:100%;height:100%;object-fit:cover}
+.emp-name{font-family:var(--fc);font-size:.95rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}
+.emp-role-badge{display:inline-flex;align-items:center;gap:5px;font-family:var(--fc);font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:4px;margin-bottom:8px}
+.role-fulltime{background:rgba(52,199,89,.1);color:var(--green);border:1px solid rgba(52,199,89,.2)}
+.role-oncall{background:rgba(0,122,255,.1);color:var(--blue);border:1px solid rgba(0,122,255,.2)}
+.emp-info{font-size:.78rem;color:var(--wm);line-height:1.7;margin-bottom:10px}
+.emp-status-dot{position:absolute;top:14px;right:14px;width:10px;height:10px;border-radius:50%}
+.emp-status-dot.on-duty{background:var(--green);box-shadow:0 0 8px rgba(52,199,89,.6)}
+.emp-status-dot.off-duty{background:rgba(255,255,255,.2)}
+.emp-actions{display:flex;gap:7px}
+
+/* PROMO */
+.promo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
+.promo-card{background:var(--bk2);border:1px solid var(--bor);border-radius:var(--r);padding:17px;transition:all .2s}
+.promo-card:hover{border-color:rgba(0,122,255,.28)}
+.promo-card.active-p{border-color:rgba(52,199,89,.3)}
+.promo-disc{font-family:var(--fd);font-size:2.2rem;color:var(--og);line-height:1;margin-bottom:4px}
+.promo-name{font-family:var(--fc);font-size:.88rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+.promo-desc{font-size:.78rem;color:var(--wm);line-height:1.6;margin-bottom:8px}
+.promo-dates{font-size:.7rem;color:rgba(255,255,255,.3);font-family:var(--fc);font-weight:700;margin-bottom:10px}
+.promo-actions{display:flex;gap:7px}
+
+/* REVIEWS */
+.review-item{background:var(--bk2);border:1px solid var(--bor);border-radius:var(--r);padding:16px;margin-bottom:11px;display:flex;gap:14px;transition:all .2s}
+.review-item:hover{border-color:rgba(0,122,255,.28)}
+.rv-avatar{width:38px;height:38px;background:var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:1.1rem;color:var(--wh);flex-shrink:0}
+.rv-content{flex:1;min-width:0}
+.rv-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px}
+.rv-name{font-family:var(--fc);font-size:.86rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.rv-stars{color:var(--yellow);font-size:.8rem;letter-spacing:1px}
+.rv-meta{font-size:.7rem;color:rgba(255,255,255,.3);font-family:var(--fc);font-weight:700;margin-bottom:7px}
+.rv-text{font-size:.83rem;color:var(--wm);line-height:1.65;font-style:italic;margin-bottom:8px}
+.rv-actions{display:flex;gap:7px}
+
+/* EXTENSION TAG */
+.ext-tag{display:inline-flex;align-items:center;gap:4px;background:rgba(90,200,250,.1);border:1px solid rgba(90,200,250,.25);border-radius:4px;padding:2px 8px;font-family:var(--fc);font-size:.6rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--teal)}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);z-index:500;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bk2);border:1px solid rgba(0,122,255,.3);border-radius:18px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto;animation:modalIn .25s ease}
+@keyframes modalIn{from{opacity:0;transform:scale(.94) translateY(16px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-header{padding:20px 22px 16px;border-bottom:1px solid var(--bor);display:flex;align-items:center;justify-content:space-between}
+.modal-header h3{font-family:var(--fd);font-size:1.3rem;letter-spacing:.04em}
+.modal-header h3 span{color:var(--blue)}
+.modal-close{width:28px;height:28px;background:var(--bk4);border:1px solid var(--bor);border-radius:50%;color:var(--wm);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .18s;font-size:.9rem}
+.modal-close:hover{background:var(--red);border-color:transparent;color:#fff}
+.modal-body{padding:20px 22px}
+.modal-footer{padding:14px 22px;border-top:1px solid var(--bor);display:flex;gap:9px;justify-content:flex-end}
+
+/* FORM */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-group{margin-bottom:13px}
+.form-label{display:block;font-family:var(--fc);font-size:.68rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:6px}
+.form-input,.form-select,.form-textarea{width:100%;background:var(--bk4);border:1.5px solid var(--bor);border-radius:var(--rs);padding:10px 13px;font-family:var(--fb);font-size:.88rem;color:var(--wh);transition:border-color .2s,box-shadow .2s}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,122,255,.12)}
+.form-input::placeholder,.form-textarea::placeholder{color:rgba(255,255,255,.2)}
+.form-textarea{resize:vertical;min-height:76px}
+.form-select{appearance:none;cursor:pointer}
+.form-select option{background:var(--bk3)}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;background:var(--bk3);border:1px solid var(--bor);border-radius:var(--rs);padding:11px 13px;margin-bottom:13px}
+.toggle-label{font-family:var(--fc);font-size:.8rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.toggle{width:42px;height:22px;background:var(--bk5);border-radius:100px;border:none;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+.toggle::after{content:'';position:absolute;width:16px;height:16px;background:#fff;border-radius:50%;top:3px;left:3px;transition:transform .2s}
+.toggle.on{background:var(--green)}
+.toggle.on::after{transform:translateX(20px)}
+.img-upload-zone{border:2px dashed var(--bor);border-radius:var(--r);padding:22px;text-align:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.img-upload-zone:hover,.img-upload-zone.dragover{border-color:var(--blue);background:rgba(0,122,255,.04)}
+.img-upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.img-preview{width:100%;max-height:140px;object-fit:cover;border-radius:var(--rs);display:none;margin-top:10px}
+
+/* EXTENSION MODAL SPECIAL */
+.ext-info-box{background:rgba(90,200,250,.06);border:1px solid rgba(90,200,250,.2);border-radius:var(--rs);padding:13px 15px;margin-bottom:14px}
+.ext-info-box .lbl{font-family:var(--fc);font-size:.65rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(90,200,250,.7);margin-bottom:3px}
+.ext-info-box .val{font-family:var(--fc);font-size:.95rem;font-weight:800;color:var(--wh)}
+.ext-cost-show{background:rgba(255,107,0,.08);border:1px solid var(--bor-og);border-radius:var(--rs);padding:13px 15px;margin-top:10px;text-align:center}
+.ext-cost-lbl{font-family:var(--fc);font-size:.68rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,107,0,.7);margin-bottom:4px}
+.ext-cost-val{font-family:var(--fd);font-size:2rem;color:var(--og);letter-spacing:.04em}
+
+/* TOAST */
+.toast{position:fixed;bottom:26px;right:26px;background:var(--bk2);border:1px solid var(--green);border-radius:var(--r);padding:13px 18px;font-family:var(--fc);font-size:.86rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--green);z-index:9999;box-shadow:var(--sh);display:none;align-items:center;gap:9px;max-width:300px;animation:slideUp .25s ease}
+.toast.show{display:flex}
+.toast.error{border-color:var(--red);color:#ff6b6b}
+@keyframes slideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:50px 20px;color:rgba(255,255,255,.25)}
+.empty-state .ei{font-size:2.8rem;margin-bottom:10px}
+.empty-state p{font-family:var(--fc);font-size:.86rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+
+@media(max-width:900px){.stats-row{grid-template-columns:repeat(2,1fr)}.fleet-grid,.emp-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.fleet-grid,.emp-grid,.promo-grid{grid-template-columns:1fr}.panel{padding:14px}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-logo">
+      <div class="brand-icon">M</div>
+      <div>
+        <div class="brand-name">DAVE</div>
+        <div class="brand-sub">Manager Panel</div>
+      </div>
+    </div>
+    <div class="mgr-badge">
+      <div class="mgr-dot"></div>
+      <span>🔑 Manager Access</span>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Main</div>
+    <button class="nav-item active" onclick="switchTab('dashboard')">
+      <span class="nav-icon">📊</span> Dashboard
+    </button>
+
+    <div class="nav-section-label">Management</div>
+    <button class="nav-item" onclick="switchTab('fleet')">
+      <span class="nav-icon">🚗</span> Fleet / Cars
+      <span class="nav-count nc-og" id="fleetCount">0</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('bookings')">
+      <span class="nav-icon">📋</span> Bookings
+      <span class="nav-count nc-red" id="bookingCount">0</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('extensions')">
+      <span class="nav-icon">⏳</span> Extensions
+      <span class="nav-count nc-teal" id="extCount">0</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('promos')">
+      <span class="nav-icon">🔥</span> Promos
+      <span class="nav-count nc-og" id="promoCount">0</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('reviews')">
+      <span class="nav-icon">⭐</span> Reviews
+      <span class="nav-count nc-green" id="reviewCount">0</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('employees')">
+      <span class="nav-icon">👥</span> Employees
+      <span class="nav-count nc-purple" id="empCount">0</span>
+    </button>
+    <!-- NOTE: NO Edit History tab — owner only -->
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="admin-user">
+      <div class="admin-avatar">🔑</div>
+      <div class="admin-info">
+        <strong id="mgrNameDisplay">MANAGER</strong>
+        <small>Dave Car Rental</small>
+      </div>
+    </div>
+    <button class="btn-logout" onclick="doLogout()">🚪 Sign Out</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main-content">
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1 id="topbarTitle">DASHBOARD</h1>
+      <span id="topbarSub">Manager Overview</span>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-time" id="liveTime"></div>
+      <a href="../index.html" class="btn-view-site" target="_blank">🌐 View Site</a>
+    </div>
+  </div>
+
+  <!-- ══ DASHBOARD ══ -->
+  <div class="panel active" id="panel-dashboard">
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-card-top"><span class="stat-icon">🚗</span><span class="stat-badge sb-og">Fleet</span></div>
+        <div class="stat-num" id="stat-cars">0</div><div class="stat-lbl">Total Vehicles</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-top"><span class="stat-icon">📋</span><span class="stat-badge sb-yellow">Pending</span></div>
+        <div class="stat-num" id="stat-pending">0</div><div class="stat-lbl">Pending Bookings</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-top"><span class="stat-icon">⏳</span><span class="stat-badge sb-teal">Extend</span></div>
+        <div class="stat-num" id="stat-exts">0</div><div class="stat-lbl">Active Extensions</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-top"><span class="stat-icon">👥</span><span class="stat-badge sb-purple">Staff</span></div>
+        <div class="stat-num" id="stat-employees">0</div><div class="stat-lbl">Total Employees</div>
+      </div>
+    </div>
+
+    <div class="panel-header">
+      <div><h2>Recent <span>Bookings</span></h2></div>
+      <button class="btn-ghost" onclick="switchTab('bookings')">View All →</button>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Customer</th><th>Car</th><th>Date</th><th>Duration</th><th>Amount</th><th>Status</th></tr></thead>
+        <tbody id="recentTbody"></tbody>
+      </table>
+    </div>
+
+    <div class="panel-header" style="margin-top:24px">
+      <div><h2>Extension <span>Requests</span></h2><div class="panel-sub">Customers asking for more time</div></div>
+      <button class="btn-ghost" onclick="switchTab('extensions')">View All →</button>
+    </div>
+    <div id="recentExtList"></div>
+  </div>
+
+  <!-- ══ FLEET ══ -->
+  <div class="panel" id="panel-fleet">
+    <div class="panel-header">
+      <div><h2>Fleet <span>Management</span></h2><div class="panel-sub">Add, edit, delete vehicles</div></div>
+      <button class="btn-blue" onclick="openCarModal()">+ Add Car</button>
+    </div>
+    <div class="fleet-grid" id="fleetGrid"></div>
+  </div>
+
+  <!-- ══ BOOKINGS ══ -->
+  <div class="panel" id="panel-bookings">
+    <div class="panel-header">
+      <div><h2>Booking <span>Management</span></h2><div class="panel-sub">Confirm, complete, or cancel bookings. Request extension ↗</div></div>
+      <select class="form-select" style="width:150px;padding:8px 12px;font-size:.82rem" id="bookingFilter" onchange="renderBookings()">
+        <option value="all">All Bookings</option>
+        <option value="Pending">Pending</option>
+        <option value="Confirmed">Confirmed</option>
+        <option value="Completed">Completed</option>
+        <option value="Cancelled">Cancelled</option>
+      </select>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>#</th><th>Customer</th><th>Car</th><th>Pick-up</th><th>Duration</th><th>Amount</th><th>Ext.</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="bookingsTbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ EXTENSIONS ══ -->
+  <div class="panel" id="panel-extensions">
+    <div class="panel-header">
+      <div><h2>Rental <span>Extensions</span></h2><div class="panel-sub">Manage customer requests for extra hours or days</div></div>
+      <button class="btn-teal" onclick="openExtModal()">+ Log Extension Request</button>
+    </div>
+    <div class="table-wrap" style="margin-bottom:0">
+      <table class="data-table">
+        <thead><tr><th>Booking Ref</th><th>Customer</th><th>Car</th><th>Original End</th><th>Extra Time</th><th>Extra Cost</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="extTbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ PROMOS ══ -->
+  <div class="panel" id="panel-promos">
+    <div class="panel-header">
+      <div><h2>Promo <span>Management</span></h2></div>
+      <button class="btn-blue" onclick="openPromoModal()">+ New Promo</button>
+    </div>
+    <div class="promo-grid" id="promoGrid"></div>
+  </div>
+
+  <!-- ══ REVIEWS ══ -->
+  <div class="panel" id="panel-reviews">
+    <div class="panel-header">
+      <div><h2>Customer <span>Reviews</span></h2></div>
+    </div>
+    <div id="reviewsList"></div>
+  </div>
+
+  <!-- ══ EMPLOYEES ══ -->
+  <div class="panel" id="panel-employees">
+    <div class="panel-header">
+      <div><h2>Employee <span>Management</span></h2><div class="panel-sub">Add and manage drivers and staff</div></div>
+      <button class="btn-blue" onclick="openEmpModal()">+ Add Employee</button>
+    </div>
+    <div class="emp-grid" id="empGrid"></div>
+  </div>
+</div>
+
+<!-- ══ EXTENSION MODAL ══ -->
+<div class="modal-overlay" id="extModal">
+  <div class="modal">
+    <div class="modal-header"><h3>Log Extension <span>Request</span></h3><button class="modal-close" onclick="closeModal('extModal')">✕</button></div>
+    <div class="modal-body">
+      <div class="ext-info-box" id="extBookingInfo" style="display:none">
+        <div class="lbl">Selected Booking</div>
+        <div class="val" id="extBookingVal">—</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Booking Reference / Customer Name *</label>
+        <select class="form-select" id="extBookingSelect" onchange="onExtBookingChange()">
+          <option value="">Select a booking...</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Extension Type</label>
+          <select class="form-select" id="extType" onchange="calcExtCost()">
+            <option value="hours">Extra Hours</option>
+            <option value="days">Extra Days</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Number of Hours / Days *</label>
+          <input class="form-input" id="extAmount" type="number" min="1" max="30" value="6" oninput="calcExtCost()">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Customer Reason</label>
+        <textarea class="form-textarea" id="extReason" placeholder="Customer's reason for extension..."></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">New End Date</label>
+        <input class="form-input" id="extNewEnd" type="date">
+      </div>
+      <div class="form-group">
+        <label class="form-label">New End Time</label>
+        <input class="form-input" id="extNewTime" type="time">
+      </div>
+      <div class="ext-cost-show">
+        <div class="ext-cost-lbl">Additional Charge</div>
+        <div class="ext-cost-val" id="extCostDisplay">₱0</div>
+        <div style="font-size:.7rem;color:rgba(255,255,255,.3);margin-top:4px" id="extCostNote">Select a booking and enter amount to calculate</div>
+      </div>
+      <input type="hidden" id="editExtId">
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeModal('extModal')">Cancel</button>
+      <button class="btn-teal" onclick="saveExtension()">⏳ Save Extension</button>
+    </div>
+  </div>
+</div>
+
+<!-- CAR MODAL -->
+<div class="modal-overlay" id="carModal">
+  <div class="modal">
+    <div class="modal-header"><h3 id="carModalTitle">Add New <span>Car</span></h3><button class="modal-close" onclick="closeModal('carModal')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Car Photo</label>
+        <div class="img-upload-zone" id="carImgZone">
+          <input type="file" id="carImgFile" accept="image/*" onchange="handleCarImg(this)">
+          <img id="carImgPreview" class="img-preview" src="" alt="">
+          <div id="carImgPlaceholder"><div style="font-size:2rem;margin-bottom:6px">🚗</div><div style="font-family:var(--fc);font-size:.8rem;font-weight:700;text-transform:uppercase;color:var(--wm)">Click to Upload Car Photo</div></div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Car Name *</label><input class="form-input" id="carName" placeholder="e.g. Toyota Vios"></div>
+        <div class="form-group"><label class="form-label">Car Type *</label><select class="form-select" id="carType"><option>Sedan</option><option>SUV</option><option>Van</option><option>Pickup</option><option>Hatchback</option><option>Minivan</option><option>MPV</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Transmission</label><select class="form-select" id="carTx"><option value="A/T">Automatic (A/T)</option><option value="M/T">Manual (M/T)</option></select></div>
+        <div class="form-group"><label class="form-label">Seats</label><select class="form-select" id="carSeats"><option>4</option><option>5</option><option>7</option><option>10</option><option>12</option><option>15</option></select></div>
+      </div>
+      <div class="form-row" style="grid-template-columns:1fr 1fr 1fr">
+        <div class="form-group"><label class="form-label">6-Hour Price (₱)</label><input class="form-input" id="carP6" type="number" placeholder="1200"></div>
+        <div class="form-group"><label class="form-label">12-Hour Price (₱)</label><input class="form-input" id="carP12" type="number" placeholder="2000"></div>
+        <div class="form-group"><label class="form-label">24-Hour Price (₱)</label><input class="form-input" id="carP24" type="number" placeholder="3200"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Features (comma-separated)</label><input class="form-input" id="carFeatures" placeholder="A/C, GPS, Tinted"></div>
+      <div class="form-group"><label class="form-label">Badge Label (optional)</label><input class="form-input" id="carBadge" placeholder="Popular, New, Best Value"></div>
+      <div class="toggle-row"><span class="toggle-label">✅ Available for Booking</span><button class="toggle on" id="carAvailToggle" onclick="this.classList.toggle('on')"></button></div>
+      <input type="hidden" id="editCarId">
+    </div>
+    <div class="modal-footer"><button class="btn-ghost" onclick="closeModal('carModal')">Cancel</button><button class="btn-blue" onclick="saveCar()">💾 Save Car</button></div>
+  </div>
+</div>
+
+<!-- PROMO MODAL -->
+<div class="modal-overlay" id="promoModal">
+  <div class="modal">
+    <div class="modal-header"><h3 id="promoModalTitle">Create <span>Promo</span></h3><button class="modal-close" onclick="closeModal('promoModal')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Promo Name *</label><input class="form-input" id="promoName" placeholder="e.g. Christmas Special"></div>
+        <div class="form-group"><label class="form-label">Discount (%)</label><input class="form-input" id="promoDisc" type="number" min="1" max="100" placeholder="30"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="promoDesc" placeholder="Describe the promo..."></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Start Date</label><input class="form-input" id="promoStart" type="date"></div>
+        <div class="form-group"><label class="form-label">End Date</label><input class="form-input" id="promoEnd" type="date"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Tag</label><input class="form-input" id="promoTag" placeholder="🎄 Christmas"></div>
+      <div class="toggle-row"><span class="toggle-label">🟢 Active / Visible on Homepage</span><button class="toggle on" id="promoActiveToggle" onclick="this.classList.toggle('on')"></button></div>
+      <input type="hidden" id="editPromoId">
+    </div>
+    <div class="modal-footer"><button class="btn-ghost" onclick="closeModal('promoModal')">Cancel</button><button class="btn-blue" onclick="savePromo()">💾 Save Promo</button></div>
+  </div>
+</div>
+
+<!-- EMPLOYEE MODAL -->
+<div class="modal-overlay" id="empModal">
+  <div class="modal">
+    <div class="modal-header"><h3 id="empModalTitle">Add <span>Employee</span></h3><button class="modal-close" onclick="closeModal('empModal')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Employee Photo (optional)</label>
+        <div class="img-upload-zone" onclick="document.getElementById('empPhotoFile').click()">
+          <input type="file" id="empPhotoFile" accept="image/*" onchange="handleEmpPhoto(this)">
+          <img id="empPhotoPreview" class="img-preview" src="" alt="">
+          <div id="empPhotoPlaceholder"><div style="font-size:2rem;margin-bottom:6px">👤</div><div style="font-family:var(--fc);font-size:.8rem;font-weight:700;text-transform:uppercase;color:var(--wm)">Upload Photo (Optional)</div></div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Full Name *</label><input class="form-input" id="empName" placeholder="Juan Dela Cruz"></div>
+        <div class="form-group"><label class="form-label">Phone Number *</label><input class="form-input" id="empPhone" placeholder="0912 345 6789"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Role *</label>
+          <select class="form-select" id="empRole">
+            <option value="Full-time Driver">🚗 Full-time Driver</option>
+            <option value="On-call Driver">📞 On-call Driver</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Status</label>
+          <select class="form-select" id="empStatus">
+            <option value="On Duty">✅ On Duty</option>
+            <option value="Off Duty">⭕ Off Duty</option>
+            <option value="On Leave">🏖️ On Leave</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">Address</label><input class="form-input" id="empAddress" placeholder="Brgy. Turno, Dipolog City"></div>
+      <div class="form-group"><label class="form-label">License Number</label><input class="form-input" id="empLicense" placeholder="D01-23-456789"></div>
+      <div class="form-group"><label class="form-label">Notes</label><textarea class="form-textarea" id="empNotes" placeholder="Additional info..."></textarea></div>
+      <input type="hidden" id="editEmpId">
+    </div>
+    <div class="modal-footer"><button class="btn-ghost" onclick="closeModal('empModal')">Cancel</button><button class="btn-blue" onclick="saveEmployee()">💾 Save Employee</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✅ <span id="toastMsg">Saved</span></div>
+
+<script>
+// ── AUTH ──
+const staffUser = JSON.parse(sessionStorage.getItem('dave_staff_user') || localStorage.getItem('dave_admin_session') || 'null');
+if (!staffUser || staffUser.role !== 'manager') { window.location.href = 'Adminlogin.html'; }
+document.getElementById('mgrNameDisplay').textContent = (staffUser?.username || 'Manager').toUpperCase();
+
+function updateClock(){ document.getElementById('liveTime').textContent = new Date().toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit'}); }
+updateClock(); setInterval(updateClock,1000);
+
+function showToast(msg,isErr=false){
+  const t=document.getElementById('toast'),m=document.getElementById('toastMsg');
+  m.textContent=msg; t.className='toast show'+(isErr?' error':'');
+  setTimeout(()=>t.className='toast',3000);
+}
+function doLogout(){ if(!confirm('Sign out?'))return; sessionStorage.removeItem('dave_staff_user'); localStorage.removeItem('dave_admin_session'); window.location.href='Adminlogin.html'; }
+
+// ── TAB META ──
+const TAB_META={
+  dashboard:{title:'DASHBOARD',sub:'Manager Overview'},
+  fleet:{title:'FLEET',sub:'Manage Vehicles'},
+  bookings:{title:'BOOKINGS',sub:'Manage Reservations'},
+  extensions:{title:'EXTENSIONS',sub:'Customer Rental Extensions'},
+  promos:{title:'PROMOS',sub:'Manage Promotions'},
+  reviews:{title:'REVIEWS',sub:'Moderate Feedback'},
+  employees:{title:'EMPLOYEES',sub:'Manage Staff'},
+};
+function switchTab(tab){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('panel-'+tab).classList.add('active');
+  const btn=document.querySelector(`[onclick="switchTab('${tab}')"]`);
+  if(btn) btn.classList.add('active');
+  const m=TAB_META[tab]||{};
+  document.getElementById('topbarTitle').textContent=m.title||tab.toUpperCase();
+  document.getElementById('topbarSub').textContent=m.sub||'';
+  const r={fleet:renderFleet,bookings:renderBookings,extensions:renderExtensions,promos:renderPromos,reviews:renderReviews,employees:renderEmployees};
+  if(r[tab]) r[tab]();
+}
+
+// ── DATA ──
+const getCars=()=>JSON.parse(localStorage.getItem('dave_admin_cars')||'[]');
+const saveCars=a=>{localStorage.setItem('dave_admin_cars',JSON.stringify(a));localStorage.setItem('dave_public_cars',JSON.stringify(a));};
+const getBookings=()=>JSON.parse(localStorage.getItem('dave_bookings')||'[]');
+const saveBookings=a=>localStorage.setItem('dave_bookings',JSON.stringify(a));
+const getPromos=()=>JSON.parse(localStorage.getItem('dave_admin_promos')||'[]');
+const savePromos=a=>{localStorage.setItem('dave_admin_promos',JSON.stringify(a));localStorage.setItem('dave_public_promos',JSON.stringify(a));};
+const getReviews=()=>JSON.parse(localStorage.getItem('dave_admin_reviews')||'[]');
+const saveReviews=a=>localStorage.setItem('dave_admin_reviews',JSON.stringify(a));
+const getEmployees=()=>JSON.parse(localStorage.getItem('dave_employees')||'[]');
+const saveEmployees=a=>localStorage.setItem('dave_employees',JSON.stringify(a));
+const getExtensions=()=>JSON.parse(localStorage.getItem('dave_extensions')||'[]');
+const saveExtensions=a=>localStorage.setItem('dave_extensions',JSON.stringify(a));
+const getHistory=()=>JSON.parse(localStorage.getItem('dave_edit_history')||'[]');
+const saveHistory=a=>localStorage.setItem('dave_edit_history',JSON.stringify(a));
+
+const php=n=>'₱'+Number(n).toLocaleString();
+const genId=()=>'id_'+Date.now()+'_'+Math.random().toString(36).substr(2,5);
+
+// ── LOG HISTORY (manager actions visible to owner) ──
+function logHistory(type,action,detail){
+  const h=getHistory();
+  h.unshift({id:genId(),type,action,detail,by:staffUser?.username||'manager',role:'manager',time:new Date().toISOString()});
+  if(h.length>200) h.splice(200);
+  saveHistory(h);
+}
+
+// ── DASHBOARD ──
+function renderDashboard(){
+  const cars=getCars(),bookings=getBookings(),employees=getEmployees(),exts=getExtensions();
+  const pending=bookings.filter(b=>b.status==='Pending').length;
+  const activeExts=exts.filter(e=>e.status==='Approved'||e.status==='Pending').length;
+  document.getElementById('stat-cars').textContent=cars.length;
+  document.getElementById('stat-pending').textContent=pending;
+  document.getElementById('stat-exts').textContent=activeExts;
+  document.getElementById('stat-employees').textContent=employees.length;
+  document.getElementById('fleetCount').textContent=cars.length;
+  document.getElementById('bookingCount').textContent=pending;
+  document.getElementById('extCount').textContent=exts.length;
+  document.getElementById('promoCount').textContent=getPromos().length;
+  document.getElementById('reviewCount').textContent=getReviews().filter(r=>r.visible!==false).length;
+  document.getElementById('empCount').textContent=employees.length;
+
+  const recent=[...bookings].reverse().slice(0,5);
+  const tbody=document.getElementById('recentTbody');
+  if(!recent.length){tbody.innerHTML=`<tr><td colspan="6"><div class="empty-state"><div class="ei">📋</div><p>No bookings yet</p></div></td></tr>`;return;}
+  tbody.innerHTML=recent.map(b=>`<tr>
+    <td><strong>${b.custName||'—'}</strong></td><td>${b.carName||'—'}</td>
+    <td>${b.pickupDate?new Date(b.pickupDate+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'}):'—'}</td>
+    <td>${b.durLabel||b.duration||'—'}</td>
+    <td style="color:var(--og);font-weight:700">${php(b.totalAmount||0)}</td>
+    <td><span class="status-badge s-${(b.status||'pending').toLowerCase()}">${b.status||'Pending'}</span></td>
+  </tr>`).join('');
+
+  // Recent extensions
+  const recentExts=exts.slice(0,3);
+  const el=document.getElementById('recentExtList');
+  if(!recentExts.length){el.innerHTML=`<div class="empty-state" style="padding:20px"><div class="ei">⏳</div><p>No extension requests yet</p></div>`;return;}
+  el.innerHTML=recentExts.map(e=>`
+    <div style="background:var(--bk2);border:1px solid rgba(90,200,250,.18);border-radius:var(--r);padding:13px 16px;margin-bottom:9px;display:flex;align-items:center;gap:14px">
+      <div style="flex:1">
+        <div style="font-family:var(--fc);font-size:.88rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em">${e.custName} — ${e.carName}</div>
+        <div style="font-size:.78rem;color:var(--wm);margin-top:2px">+${e.amount} ${e.type} · ${php(e.extraCost)} extra · Ends: ${e.newEnd||'—'}</div>
+      </div>
+      <span class="status-badge s-${(e.status||'pending').toLowerCase()}">${e.status||'Pending'}</span>
+    </div>`).join('');
+}
+
+// ── FLEET ──
+let carImgData=null;
+function openCarModal(editId=null){
+  carImgData=null;
+  document.getElementById('carImgPreview').style.display='none';
+  document.getElementById('carImgPlaceholder').style.display='block';
+  document.getElementById('editCarId').value='';
+  ['carName','carBadge','carFeatures'].forEach(id=>document.getElementById(id).value='');
+  ['carP6','carP12','carP24'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('carType').value='Sedan';
+  document.getElementById('carTx').value='A/T';
+  document.getElementById('carSeats').value='5';
+  document.getElementById('carAvailToggle').classList.add('on');
+  document.getElementById('carModalTitle').innerHTML='Add New <span>Car</span>';
+  if(editId){
+    const car=getCars().find(c=>c.id===editId);
+    if(!car)return;
+    document.getElementById('carModalTitle').innerHTML='Edit <span>Car</span>';
+    document.getElementById('editCarId').value=car.id;
+    document.getElementById('carName').value=car.name||'';
+    document.getElementById('carType').value=car.type||'Sedan';
+    document.getElementById('carTx').value=car.transmission||'A/T';
+    document.getElementById('carSeats').value=car.seats||'5';
+    document.getElementById('carP6').value=car.price6hr||'';
+    document.getElementById('carP12').value=car.price12hr||'';
+    document.getElementById('carP24').value=car.price24hr||'';
+    document.getElementById('carFeatures').value=(car.features||[]).join(', ');
+    document.getElementById('carBadge').value=car.badge||'';
+    if(!car.available) document.getElementById('carAvailToggle').classList.remove('on');
+    if(car.image){carImgData=car.image;document.getElementById('carImgPreview').src=car.image;document.getElementById('carImgPreview').style.display='block';document.getElementById('carImgPlaceholder').style.display='none';}
+  }
+  document.getElementById('carModal').classList.add('open');
+}
+function handleCarImg(input){
+  const f=input.files[0];if(!f)return;
+  if(f.size>5*1024*1024){showToast('Image too large. Max 5MB.',true);return;}
+  const r=new FileReader();
+  r.onload=e=>{carImgData=e.target.result;document.getElementById('carImgPreview').src=carImgData;document.getElementById('carImgPreview').style.display='block';document.getElementById('carImgPlaceholder').style.display='none';};
+  r.readAsDataURL(f);
+}
+function saveCar(){
+  const name=document.getElementById('carName').value.trim();
+  if(!name){showToast('Car name is required.',true);return;}
+  const p6=parseFloat(document.getElementById('carP6').value);
+  const p12=parseFloat(document.getElementById('carP12').value);
+  const p24=parseFloat(document.getElementById('carP24').value);
+  if(!p6||!p12||!p24){showToast('All three prices are required.',true);return;}
+  const cars=getCars();
+  const editId=document.getElementById('editCarId').value;
+  const typeMap={Sedan:'🚗',SUV:'🚙',Van:'🚐',Pickup:'🛻',Hatchback:'🚗',Minivan:'🚐',MPV:'🚙'};
+  const carData={id:editId||genId(),name,type:document.getElementById('carType').value,transmission:document.getElementById('carTx').value,seats:parseInt(document.getElementById('carSeats').value),price6hr:p6,price12hr:p12,price24hr:p24,features:document.getElementById('carFeatures').value.split(',').map(s=>s.trim()).filter(Boolean),badge:document.getElementById('carBadge').value.trim(),available:document.getElementById('carAvailToggle').classList.contains('on'),image:carImgData||null,emoji:typeMap[document.getElementById('carType').value]||'🚗',updatedAt:new Date().toISOString()};
+  if(editId){const idx=cars.findIndex(c=>c.id===editId);if(idx>=0)cars[idx]={...cars[idx],...carData};logHistory('fleet','Edited Car',`${name} — ${php(p6)}/6hr`);}
+  else{carData.createdAt=new Date().toISOString();cars.push(carData);logHistory('fleet','Added Car',`${name} — ${php(p6)}/6hr`);}
+  saveCars(cars);closeModal('carModal');renderFleet();renderDashboard();showToast(editId?'Car updated!':'Car added!');
+}
+function deleteCar(id){
+  if(!confirm('Delete this car?'))return;
+  const cars=getCars();const car=cars.find(c=>c.id===id);
+  saveCars(cars.filter(c=>c.id!==id));logHistory('fleet','Deleted Car',car?.name||id);renderFleet();renderDashboard();showToast('Car deleted.');
+}
+function toggleCarAvail(id){
+  const cars=getCars();const car=cars.find(c=>c.id===id);if(!car)return;
+  car.available=!car.available;saveCars(cars);logHistory('fleet',car.available?'Set Available':'Set Unavailable',car.name);renderFleet();showToast(car.available?'Car marked Available.':'Car marked Unavailable.');
+}
+function renderFleet(){
+  const cars=getCars();const grid=document.getElementById('fleetGrid');
+  document.getElementById('fleetCount').textContent=cars.length;
+  if(!cars.length){grid.innerHTML=`<div style="grid-column:1/-1"><div class="empty-state"><div class="ei">🚗</div><p>No cars added yet</p></div></div>`;return;}
+  grid.innerHTML=cars.map(car=>`<div class="car-card">
+    <div class="car-img">${car.image?`<img src="${car.image}" alt="${car.name}">`:`<span>${car.emoji||'🚗'}</span>`}${car.badge?`<div class="car-img-badge">${car.badge}</div>`:''}<div class="car-avail ${car.available?'yes':'no'}">${car.available?'✓ Available':'✗ Booked'}</div></div>
+    <div class="car-body">
+      <div class="car-name">${car.name}</div>
+      <div class="car-type">${car.type} · ${car.seats} seats · ${car.transmission}</div>
+      <div class="car-prices">
+        <div class="cp"><span class="cp-l">6hr</span><span class="cp-v">${php(car.price6hr)}</span></div>
+        <div class="cp"><span class="cp-l">12hr</span><span class="cp-v">${php(car.price12hr)}</span></div>
+        <div class="cp"><span class="cp-l">24hr</span><span class="cp-v">${php(car.price24hr)}</span></div>
+      </div>
+      <div class="car-actions">
+        <button class="btn-ghost" onclick="toggleCarAvail('${car.id}')" style="font-size:.7rem;padding:6px 8px">${car.available?'🔴 Unavail':'🟢 Avail'}</button>
+        <button class="btn-ghost" onclick="openCarModal('${car.id}')" style="font-size:.7rem;padding:6px 8px">✏️ Edit</button>
+        <button class="btn-red" onclick="deleteCar('${car.id}')" style="font-size:.7rem;padding:6px 8px">🗑</button>
+      </div>
+    </div>
+  </div>`).join('');
+}
+
+// ── BOOKINGS ──
+function renderBookings(){
+  const filter=document.getElementById('bookingFilter').value;
+  let bookings=getBookings();
+  if(filter!=='all') bookings=bookings.filter(b=>b.status===filter);
+  bookings=[...bookings].reverse();
+  const exts=getExtensions();
+  const tbody=document.getElementById('bookingsTbody');
+  if(!bookings.length){tbody.innerHTML=`<tr><td colspan="9"><div class="empty-state"><div class="ei">📋</div><p>No bookings found</p></div></td></tr>`;return;}
+  tbody.innerHTML=bookings.map((b,i)=>{
+    const bExts=exts.filter(e=>e.bookingId===b.id);
+    const extTag=bExts.length?`<span class="ext-tag">+${bExts.length} ext</span>`:'';
+    return `<tr>
+      <td style="color:rgba(255,255,255,.3);font-size:.74rem">#${String(bookings.length-i).padStart(3,'0')}</td>
+      <td><strong style="font-size:.86rem">${b.custName||'—'}</strong><div style="font-size:.7rem;color:var(--wm)">${b.custPhone||''}</div></td>
+      <td><strong style="font-size:.86rem">${b.carName||'—'}</strong></td>
+      <td style="font-size:.82rem">${b.pickupDate?new Date(b.pickupDate+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'}):'—'}<div style="font-size:.7rem;color:var(--wm)">${b.pickupTime||''}</div></td>
+      <td style="font-size:.82rem">${b.durLabel||b.duration||'—'}</td>
+      <td style="color:var(--og);font-weight:700;font-family:var(--fc)">${php(b.totalAmount||0)}</td>
+      <td>${extTag}</td>
+      <td><span class="status-badge s-${(b.status||'pending').toLowerCase()}">${b.status||'Pending'}</span></td>
+      <td><div style="display:flex;gap:5px;flex-wrap:wrap">
+        ${b.status==='Pending'?`<button class="btn-green" style="font-size:.68rem;padding:5px 9px" onclick="updateBooking('${b.id}','Confirmed')">✓</button><button class="btn-red" style="font-size:.68rem;padding:5px 9px" onclick="updateBooking('${b.id}','Cancelled')">✕</button>`:''}
+        ${b.status==='Confirmed'?`<button class="btn-green" style="font-size:.68rem;padding:5px 9px" onclick="updateBooking('${b.id}','Completed')">✅</button><button class="btn-teal" style="font-size:.68rem;padding:5px 9px" onclick="openExtModalForBooking('${b.id}')">⏳ Extend</button>`:''}
+        ${b.status==='Completed'||b.status==='Cancelled'?`<span style="font-size:.7rem;color:rgba(255,255,255,.25);font-family:var(--fc);text-transform:uppercase">${b.status}</span>`:''}
+      </div></td>
+    </tr>`;}).join('');
+}
+function updateBooking(id,status){
+  const bookings=getBookings();const b=bookings.find(x=>x.id===id);if(!b)return;
+  b.status=status;b.updatedAt=new Date().toISOString();
+  saveBookings(bookings);logHistory('booking',`Booking ${status}`,`${b.custName||'Customer'} — ${b.carName||'Car'}`);
+  renderBookings();renderDashboard();showToast(`Booking ${status.toLowerCase()}!`);
+}
+
+// ── EXTENSIONS ──
+function openExtModal(){
+  document.getElementById('editExtId').value='';
+  document.getElementById('extReason').value='';
+  document.getElementById('extAmount').value='6';
+  document.getElementById('extType').value='hours';
+  document.getElementById('extNewEnd').value='';
+  document.getElementById('extNewTime').value='';
+  document.getElementById('extCostDisplay').textContent='₱0';
+  document.getElementById('extCostNote').textContent='Select a booking and enter amount to calculate';
+  document.getElementById('extBookingInfo').style.display='none';
+  // Populate booking dropdown
+  const bookings=getBookings().filter(b=>b.status==='Confirmed');
+  const sel=document.getElementById('extBookingSelect');
+  sel.innerHTML='<option value="">Select a booking...</option>'+bookings.map(b=>`<option value="${b.id}">${b.custName||'Customer'} — ${b.carName||'Car'} (${b.durLabel||b.duration||''})</option>`).join('');
+  document.getElementById('extModal').classList.add('open');
+}
+function openExtModalForBooking(bookingId){
+  openExtModal();
+  document.getElementById('extBookingSelect').value=bookingId;
+  onExtBookingChange();
+}
+function onExtBookingChange(){
+  const id=document.getElementById('extBookingSelect').value;
+  const b=getBookings().find(x=>x.id===id);
+  if(!b){document.getElementById('extBookingInfo').style.display='none';return;}
+  document.getElementById('extBookingInfo').style.display='block';
+  document.getElementById('extBookingVal').textContent=`${b.custName||'Customer'} · ${b.carName||'Car'} · ${b.durLabel||b.duration||'—'} · Ends: ${b.dropoffDate||'—'}`;
+  calcExtCost();
+}
+function calcExtCost(){
+  const id=document.getElementById('extBookingSelect').value;
+  const b=getBookings().find(x=>x.id===id);
+  const type=document.getElementById('extType').value;
+  const amount=parseInt(document.getElementById('extAmount').value)||0;
+  if(!b||!amount){document.getElementById('extCostDisplay').textContent='₱0';return;}
+  // Find car price
+  const cars=getCars();
+  const car=cars.find(c=>c.name===b.carName||c.id===b.carId);
+  let extraCost=0;
+  if(car){
+    if(type==='hours') extraCost=Math.ceil(amount/6)*car.price6hr;
+    else extraCost=amount*car.price24hr;
+  } else {
+    extraCost=type==='hours'?amount*200:amount*3000;
+  }
+  document.getElementById('extCostDisplay').textContent=php(extraCost);
+  document.getElementById('extCostNote').textContent=`${amount} ${type} × rate = ${php(extraCost)}`;
+}
+function saveExtension(){
+  const bookingId=document.getElementById('extBookingSelect').value;
+  if(!bookingId){showToast('Please select a booking.',true);return;}
+  const amount=parseInt(document.getElementById('extAmount').value);
+  if(!amount||amount<1){showToast('Enter a valid number.',true);return;}
+  const b=getBookings().find(x=>x.id===bookingId);
+  if(!b){showToast('Booking not found.',true);return;}
+  const type=document.getElementById('extType').value;
+  const cars=getCars();
+  const car=cars.find(c=>c.name===b.carName||c.id===b.carId);
+  let extraCost=0;
+  if(car){
+    if(type==='hours') extraCost=Math.ceil(amount/6)*car.price6hr;
+    else extraCost=amount*car.price24hr;
+  } else {
+    extraCost=type==='hours'?amount*200:amount*3000;
+  }
+  const exts=getExtensions();
+  const editId=document.getElementById('editExtId').value;
+  const extData={
+    id:editId||genId(),
+    bookingId, custName:b.custName||'Customer', carName:b.carName||'Car',
+    originalEnd:b.dropoffDate||'—',
+    type, amount, extraCost,
+    reason:document.getElementById('extReason').value.trim(),
+    newEnd:document.getElementById('extNewEnd').value||'—',
+    newTime:document.getElementById('extNewTime').value||'—',
+    status:'Approved',
+    loggedBy:staffUser?.username||'manager',
+    createdAt:new Date().toISOString(),
+  };
+  if(editId){const idx=exts.findIndex(e=>e.id===editId);if(idx>=0)exts[idx]={...exts[idx],...extData};}
+  else exts.unshift(extData);
+  saveExtensions(exts);
+  // Update booking total
+  const bookings=getBookings();
+  const bk=bookings.find(x=>x.id===bookingId);
+  if(bk){bk.totalAmount=(bk.totalAmount||0)+extraCost;bk.durLabel=(bk.durLabel||bk.duration||'')+(type==='hours'?` +${amount}hrs`:` +${amount}d`);saveBookings(bookings);}
+  logHistory('booking',`Extension Logged`,`${b.custName} — +${amount} ${type} · ${php(extraCost)} extra`);
+  closeModal('extModal');renderExtensions();renderDashboard();showToast('Extension saved!');
+}
+function deleteExtension(id){
+  if(!confirm('Remove this extension?'))return;
+  saveExtensions(getExtensions().filter(e=>e.id!==id));
+  renderExtensions();renderDashboard();showToast('Extension removed.');
+}
+function renderExtensions(){
+  const exts=getExtensions();
+  const tbody=document.getElementById('extTbody');
+  document.getElementById('extCount').textContent=exts.length;
+  if(!exts.length){tbody.innerHTML=`<tr><td colspan="8"><div class="empty-state"><div class="ei">⏳</div><p>No extension requests yet</p></div></td></tr>`;return;}
+  tbody.innerHTML=exts.map((e,i)=>`<tr>
+    <td style="font-size:.78rem;color:var(--teal);font-family:var(--fc)">#${String(exts.length-i).padStart(3,'0')}</td>
+    <td><strong>${e.custName}</strong></td>
+    <td>${e.carName}</td>
+    <td style="font-size:.8rem;color:var(--wm)">${e.originalEnd}</td>
+    <td><strong style="color:var(--teal)">+${e.amount} ${e.type}</strong></td>
+    <td style="color:var(--og);font-weight:700;font-family:var(--fc)">${php(e.extraCost)}</td>
+    <td><span class="status-badge s-${(e.status||'pending').toLowerCase()}">${e.status}</span></td>
+    <td><div style="display:flex;gap:5px">
+      <button class="btn-teal" onclick="openExtModalForEdit('${e.id}')" style="font-size:.68rem;padding:5px 9px">✏️ Edit</button>
+      <button class="btn-red" onclick="deleteExtension('${e.id}')" style="font-size:.68rem;padding:5px 9px">🗑</button>
+    </div></td>
+  </tr>`).join('');
+}
+function openExtModalForEdit(id){
+  const e=getExtensions().find(x=>x.id===id);
+  if(!e)return;
+  openExtModal();
+  setTimeout(()=>{
+    document.getElementById('extBookingSelect').value=e.bookingId;
+    onExtBookingChange();
+    document.getElementById('extType').value=e.type;
+    document.getElementById('extAmount').value=e.amount;
+    document.getElementById('extReason').value=e.reason||'';
+    document.getElementById('extNewEnd').value=e.newEnd!=='—'?e.newEnd:'';
+    document.getElementById('extNewTime').value=e.newTime!=='—'?e.newTime:'';
+    document.getElementById('editExtId').value=id;
+    calcExtCost();
+  },50);
+}
+
+// ── PROMOS ──
+function openPromoModal(editId=null){
+  ['promoName','promoDesc','promoTag','promoStart','promoEnd'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('promoDisc').value='';
+  document.getElementById('promoActiveToggle').classList.add('on');
+  document.getElementById('editPromoId').value='';
+  document.getElementById('promoModalTitle').innerHTML='Create <span>Promo</span>';
+  if(editId){
+    const p=getPromos().find(x=>x.id===editId);if(!p)return;
+    document.getElementById('promoModalTitle').innerHTML='Edit <span>Promo</span>';
+    document.getElementById('editPromoId').value=p.id;
+    document.getElementById('promoName').value=p.name||'';
+    document.getElementById('promoDisc').value=p.discount||'';
+    document.getElementById('promoDesc').value=p.desc||'';
+    document.getElementById('promoStart').value=p.startDate||'';
+    document.getElementById('promoEnd').value=p.endDate||'';
+    document.getElementById('promoTag').value=p.tag||'';
+    if(!p.active) document.getElementById('promoActiveToggle').classList.remove('on');
+  }
+  document.getElementById('promoModal').classList.add('open');
+}
+function savePromo(){
+  const name=document.getElementById('promoName').value.trim();
+  const disc=parseInt(document.getElementById('promoDisc').value);
+  if(!name||!disc){showToast('Name and discount % required.',true);return;}
+  const promos=getPromos();const editId=document.getElementById('editPromoId').value;
+  const data={id:editId||genId(),name,discount:disc,desc:document.getElementById('promoDesc').value.trim(),startDate:document.getElementById('promoStart').value,endDate:document.getElementById('promoEnd').value,tag:document.getElementById('promoTag').value.trim()||'🏷️ Promo',active:document.getElementById('promoActiveToggle').classList.contains('on'),updatedAt:new Date().toISOString()};
+  if(editId){const idx=promos.findIndex(p=>p.id===editId);if(idx>=0)promos[idx]={...promos[idx],...data};logHistory('promo','Edited Promo',`${name} — ${disc}% OFF`);}
+  else{data.createdAt=new Date().toISOString();promos.push(data);logHistory('promo','Created Promo',`${name} — ${disc}% OFF`);}
+  savePromos(promos);closeModal('promoModal');renderPromos();renderDashboard();showToast(editId?'Promo updated!':'Promo created!');
+}
+function deletePromo(id){
+  if(!confirm('Delete this promo?'))return;
+  const promos=getPromos();const p=promos.find(x=>x.id===id);
+  savePromos(promos.filter(x=>x.id!==id));logHistory('promo','Deleted Promo',p?.name||id);renderPromos();renderDashboard();showToast('Promo deleted.');
+}
+function renderPromos(){
+  const promos=getPromos();const grid=document.getElementById('promoGrid');
+  document.getElementById('promoCount').textContent=promos.length;
+  if(!promos.length){grid.innerHTML=`<div style="grid-column:1/-1"><div class="empty-state"><div class="ei">🔥</div><p>No promos yet</p></div></div>`;return;}
+  const now=new Date();
+  grid.innerHTML=promos.map(p=>{const isActive=p.active&&(!p.endDate||new Date(p.endDate)>=now);
+    return `<div class="promo-card ${isActive?'active-p':''}">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:6px">
+        <div class="promo-disc">${p.discount}% OFF</div>
+        <span class="status-badge ${isActive?'s-confirmed':'s-cancelled'}">${isActive?'Active':'Inactive'}</span>
+      </div>
+      <div class="promo-name">${p.name}</div>
+      <div class="promo-desc">${p.desc||'No description'}</div>
+      <div class="promo-dates">📅 ${p.startDate||'—'} → ${p.endDate||'No end'} · ${p.tag}</div>
+      <div class="promo-actions"><button class="btn-ghost" onclick="openPromoModal('${p.id}')" style="flex:1;font-size:.74rem">✏️ Edit</button><button class="btn-red" onclick="deletePromo('${p.id}')" style="font-size:.74rem">🗑</button></div>
+    </div>`;}).join('');
+}
+
+// ── REVIEWS ──
+function toggleReview(id){
+  const reviews=getReviews();const r=reviews.find(x=>x.id===id);if(!r)return;
+  r.visible=r.visible===false;saveReviews(reviews);logHistory('review',r.visible?'Showed Review':'Hid Review',`${r.name||'Customer'}`);renderReviews();showToast(r.visible?'Review visible.':'Review hidden.');
+}
+function deleteReview(id){
+  if(!confirm('Delete this review?'))return;
+  const reviews=getReviews();const r=reviews.find(x=>x.id===id);
+  saveReviews(reviews.filter(x=>x.id!==id));logHistory('review','Deleted Review',r?.name||'Customer');renderReviews();showToast('Review deleted.');
+}
+function renderReviews(){
+  const reviews=getReviews();const list=document.getElementById('reviewsList');
+  document.getElementById('reviewCount').textContent=reviews.filter(r=>r.visible!==false).length;
+  if(!reviews.length){list.innerHTML=`<div class="empty-state"><div class="ei">⭐</div><p>No reviews yet</p></div>`;return;}
+  list.innerHTML=reviews.map(r=>`<div class="review-item">
+    <div class="rv-avatar">${(r.name||'?').charAt(0).toUpperCase()}</div>
+    <div class="rv-content">
+      <div class="rv-top"><span class="rv-name">${r.name||'Anonymous'}</span><span class="rv-stars">${'★'.repeat(r.stars||5)}${'☆'.repeat(5-(r.stars||5))}</span></div>
+      <div class="rv-meta">${r.date||'—'} · <span style="color:${r.visible===false?'#ff6b6b':'var(--green)'}">${r.visible===false?'Hidden':'Visible'}</span></div>
+      <div class="rv-text">"${r.text||r.comment||''}"</div>
+      <div class="rv-actions">
+        <button class="${r.visible===false?'btn-green':'btn-ghost'}" onclick="toggleReview('${r.id}')" style="font-size:.72rem;padding:5px 10px">${r.visible===false?'👁 Show':'🙈 Hide'}</button>
+        <button class="btn-red" onclick="deleteReview('${r.id}')" style="font-size:.72rem;padding:5px 10px">🗑</button>
+      </div>
+    </div>
+  </div>`).join('');
+}
+
+// ── EMPLOYEES ──
+let empPhotoData=null;
+function openEmpModal(editId=null){
+  empPhotoData=null;
+  document.getElementById('empPhotoPreview').style.display='none';
+  document.getElementById('empPhotoPlaceholder').style.display='block';
+  document.getElementById('editEmpId').value='';
+  ['empName','empPhone','empAddress','empLicense','empNotes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('empRole').value='Full-time Driver';
+  document.getElementById('empStatus').value='On Duty';
+  document.getElementById('empModalTitle').innerHTML='Add <span>Employee</span>';
+  if(editId){
+    const emp=getEmployees().find(e=>e.id===editId);if(!emp)return;
+    document.getElementById('empModalTitle').innerHTML='Edit <span>Employee</span>';
+    document.getElementById('editEmpId').value=emp.id;
+    document.getElementById('empName').value=emp.name||'';
+    document.getElementById('empPhone').value=emp.phone||'';
+    document.getElementById('empRole').value=emp.role||'Full-time Driver';
+    document.getElementById('empStatus').value=emp.status||'On Duty';
+    document.getElementById('empAddress').value=emp.address||'';
+    document.getElementById('empLicense').value=emp.license||'';
+    document.getElementById('empNotes').value=emp.notes||'';
+    if(emp.photo){empPhotoData=emp.photo;document.getElementById('empPhotoPreview').src=emp.photo;document.getElementById('empPhotoPreview').style.display='block';document.getElementById('empPhotoPlaceholder').style.display='none';}
+  }
+  document.getElementById('empModal').classList.add('open');
+}
+function handleEmpPhoto(input){
+  const f=input.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{empPhotoData=e.target.result;document.getElementById('empPhotoPreview').src=empPhotoData;document.getElementById('empPhotoPreview').style.display='block';document.getElementById('empPhotoPlaceholder').style.display='none';};
+  r.readAsDataURL(f);
+}
+function saveEmployee(){
+  const name=document.getElementById('empName').value.trim();
+  const phone=document.getElementById('empPhone').value.trim();
+  if(!name||!phone){showToast('Name and phone required.',true);return;}
+  const employees=getEmployees();const editId=document.getElementById('editEmpId').value;
+  const role=document.getElementById('empRole').value;
+  const empData={id:editId||genId(),name,phone,role,status:document.getElementById('empStatus').value,address:document.getElementById('empAddress').value.trim(),license:document.getElementById('empLicense').value.trim(),notes:document.getElementById('empNotes').value.trim(),photo:empPhotoData||null,updatedAt:new Date().toISOString()};
+  if(editId){const idx=employees.findIndex(e=>e.id===editId);if(idx>=0)employees[idx]={...employees[idx],...empData};logHistory('employee','Edited Employee',`${name} — ${role}`);}
+  else{empData.createdAt=new Date().toISOString();employees.push(empData);logHistory('employee','Added Employee',`${name} — ${role}`);}
+  saveEmployees(employees);closeModal('empModal');renderEmployees();renderDashboard();showToast(editId?'Employee updated!':'Employee added!');
+}
+function deleteEmployee(id){
+  if(!confirm('Remove this employee?'))return;
+  const employees=getEmployees();const emp=employees.find(e=>e.id===id);
+  saveEmployees(employees.filter(e=>e.id!==id));logHistory('employee','Removed Employee',emp?.name||id);renderEmployees();renderDashboard();showToast('Employee removed.');
+}
+function renderEmployees(){
+  const employees=getEmployees();const grid=document.getElementById('empGrid');
+  document.getElementById('empCount').textContent=employees.length;
+  if(!employees.length){grid.innerHTML=`<div style="grid-column:1/-1"><div class="empty-state"><div class="ei">👥</div><p>No employees added yet</p></div></div>`;return;}
+  grid.innerHTML=employees.map(emp=>`<div class="emp-card">
+    <div class="emp-status-dot ${emp.status==='On Duty'?'on-duty':'off-duty'}"></div>
+    <div class="emp-avatar">${emp.photo?`<img src="${emp.photo}" alt="${emp.name}">`:(emp.name||'?').charAt(0).toUpperCase()}</div>
+    <div class="emp-name">${emp.name}</div>
+    <div class="emp-role-badge ${emp.role==='Full-time Driver'?'role-fulltime':'role-oncall'}">${emp.role==='Full-time Driver'?'🚗 Full-time Driver':'📞 On-call Driver'}</div>
+    <div class="emp-info">📞 ${emp.phone||'—'}<br>📍 ${emp.address||'—'}<br>🪪 ${emp.license||'—'}<br>⭕ <strong style="color:${emp.status==='On Duty'?'var(--green)':emp.status==='On Leave'?'var(--yellow)':'rgba(255,255,255,.5)'}">${emp.status||'—'}</strong>${emp.notes?`<br>📝 ${emp.notes}`:''}</div>
+    <div class="emp-actions">
+      <button class="btn-ghost" onclick="openEmpModal('${emp.id}')" style="font-size:.7rem;padding:6px 8px">✏️ Edit</button>
+      <button class="btn-red" onclick="deleteEmployee('${emp.id}')" style="font-size:.7rem;padding:6px 8px">🗑</button>
+    </div>
+  </div>`).join('');
+}
+
+// ── MODAL HELPERS ──
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
+
+// ── INIT ──
+renderDashboard();
+</script>
+</body>
+</html>

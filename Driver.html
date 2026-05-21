@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Driver Dashboard — Dave Car Rental</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --og:#FF6B00;--og2:#FF8A1F;--bk:#0A0A0A;--bk2:#111111;--bk3:#1C1C1C;--bk4:#2A2A2A;--bk5:#333;
+  --wh:#FFFFFF;--wm:rgba(255,255,255,.6);--wd:rgba(255,255,255,.06);
+  --bor:rgba(255,255,255,.10);--bor-og:rgba(255,107,0,.28);
+  --green:#34C759;--red:#FF3B30;--blue:#007AFF;--yellow:#FFD700;--purple:#AF52DE;--teal:#5AC8FA;
+  --fd:'Bebas Neue',sans-serif;--fc:'Barlow Condensed',sans-serif;--fb:'Barlow',sans-serif;
+  --r:12px;--rs:8px;--sh:0 8px 32px rgba(0,0,0,.5);--sidebar:240px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--fb);background:var(--bk);color:var(--wh);display:flex;min-height:100vh}
+a{text-decoration:none;color:inherit}button{cursor:pointer;font-family:var(--fb)}
+img{max-width:100%;display:block}input,textarea,select{outline:none;font-family:var(--fb)}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar);min-height:100vh;background:var(--bk2);border-right:1px solid rgba(52,199,89,.22);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100}
+.sidebar-brand{padding:20px 16px;border-bottom:1px solid var(--bor)}
+.brand-logo{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.brand-icon{width:34px;height:34px;background:var(--green);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:1.1rem;color:var(--bk);flex-shrink:0}
+.brand-name{font-family:var(--fd);font-size:1.2rem;color:var(--green);letter-spacing:.04em}
+.brand-sub{font-family:var(--fc);font-size:.58rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.25)}
+.driver-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(52,199,89,.1);border:1px solid rgba(52,199,89,.25);border-radius:100px;padding:3px 10px;margin-top:6px}
+.drv-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(52,199,89,.5)}50%{box-shadow:0 0 0 5px rgba(52,199,89,0)}}
+.driver-badge span{font-family:var(--fc);font-size:.62rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--green)}
+
+/* DRIVER PROFILE IN SIDEBAR */
+.drv-profile{margin:14px 12px 6px;background:var(--bk3);border:1px solid rgba(52,199,89,.18);border-radius:var(--r);padding:14px;text-align:center}
+.drv-avatar-big{width:68px;height:68px;border-radius:50%;background:var(--green);border:3px solid rgba(52,199,89,.4);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:2rem;color:var(--bk);margin:0 auto 10px;overflow:hidden;position:relative;cursor:pointer}
+.drv-avatar-big img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;display:none}
+.drv-avatar-big input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.drv-name{font-family:var(--fc);font-size:.95rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}
+.drv-role-pill{display:inline-flex;align-items:center;gap:5px;font-family:var(--fc);font-size:.6rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:4px;margin-bottom:8px}
+.pill-ft{background:rgba(52,199,89,.1);color:var(--green);border:1px solid rgba(52,199,89,.22)}
+.pill-oc{background:rgba(0,122,255,.1);color:var(--blue);border:1px solid rgba(0,122,255,.22)}
+.drv-status-row{display:flex;gap:6px;justify-content:center}
+.drv-stat-mini{flex:1;background:var(--bk4);border:1px solid var(--bor);border-radius:6px;padding:6px 4px;text-align:center}
+.dsm-num{font-family:var(--fd);font-size:1.1rem;color:var(--yellow);display:block;line-height:1}
+.dsm-lbl{font-family:var(--fc);font-size:.52rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.3);display:block;margin-top:2px}
+
+.sidebar-nav{flex:1;padding:10px 10px;display:flex;flex-direction:column;gap:3px;overflow-y:auto}
+.nav-section-label{font-family:var(--fc);font-size:.6rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.2);padding:8px 8px 5px;margin-top:4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--rs);font-family:var(--fc);font-size:.88rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:rgba(255,255,255,.45);cursor:pointer;transition:all .18s;border:1px solid transparent;background:none;width:100%;text-align:left}
+.nav-item:hover{background:var(--wd);color:var(--wh)}
+.nav-item.active{background:rgba(52,199,89,.1);border-color:rgba(52,199,89,.25);color:var(--green)}
+.nav-icon{font-size:1rem;flex-shrink:0}
+.nav-count{margin-left:auto;font-family:var(--fc);font-size:.6rem;font-weight:800;padding:2px 7px;border-radius:100px;min-width:18px;text-align:center}
+.nc-og{background:var(--og);color:var(--bk)}.nc-green{background:var(--green);color:var(--bk)}.nc-yellow{background:var(--yellow);color:var(--bk)}.nc-teal{background:var(--teal);color:var(--bk)}.nc-red{background:var(--red);color:#fff}
+
+.sidebar-footer{padding:12px 10px;border-top:1px solid var(--bor)}
+.btn-status{width:100%;border:none;border-radius:var(--rs);padding:10px;font-family:var(--fc);font-size:.8rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;transition:all .18s;margin-bottom:7px}
+.btn-status.on-duty{background:rgba(52,199,89,.12);color:var(--green);border:1px solid rgba(52,199,89,.25)}
+.btn-status.off-duty{background:rgba(255,255,255,.06);color:rgba(255,255,255,.4);border:1px solid var(--bor)}
+.btn-logout{width:100%;background:rgba(255,59,48,.1);border:1px solid rgba(255,59,48,.2);border-radius:var(--rs);padding:9px;font-family:var(--fc);font-size:.76rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#ff6b6b;transition:all .18s}
+.btn-logout:hover{background:rgba(255,59,48,.2)}
+
+/* MAIN */
+.main-content{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:var(--bk2);border-bottom:1px solid rgba(52,199,89,.18);padding:0 26px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.topbar-left h1{font-family:var(--fd);font-size:1.5rem;letter-spacing:.04em}
+.topbar-left h1 span{color:var(--green)}
+.topbar-sub{font-family:var(--fc);font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--wm);margin-left:10px}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.topbar-time{font-family:var(--fc);font-size:.78rem;font-weight:700;letter-spacing:.06em;color:rgba(255,255,255,.3)}
+.duty-indicator{display:inline-flex;align-items:center;gap:6px;font-family:var(--fc);font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:6px 13px;border-radius:20px}
+.di-on{background:rgba(52,199,89,.12);color:var(--green);border:1px solid rgba(52,199,89,.25)}
+.di-off{background:rgba(255,255,255,.06);color:rgba(255,255,255,.4);border:1px solid var(--bor)}
+
+/* PANELS */
+.panel{display:none;padding:26px;animation:fadeIn .3s ease}
+.panel.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* TODAY BANNER */
+.today-banner{background:linear-gradient(135deg,rgba(52,199,89,.12) 0%,rgba(0,122,255,.08) 100%);border:1px solid rgba(52,199,89,.2);border-radius:var(--r);padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.tb-date{font-family:var(--fd);font-size:1.8rem;letter-spacing:.04em;color:var(--green);white-space:nowrap}
+.tb-label{font-family:var(--fc);font-size:.68rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:4px}
+.tb-next{font-family:var(--fc);font-size:.92rem;font-weight:700;color:var(--wh)}
+.tb-dots{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap}
+.tb-dot{background:var(--bk3);border:1px solid var(--bor);border-radius:8px;padding:10px 16px;text-align:center;min-width:70px}
+.tb-dot-num{font-family:var(--fd);font-size:1.5rem;color:var(--yellow);display:block;line-height:1}
+.tb-dot-lbl{font-family:var(--fc);font-size:.55rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);display:block;margin-top:2px}
+
+/* NEXT TRIP CARD */
+.next-trip{background:rgba(255,107,0,.06);border:1.5px solid var(--bor-og);border-radius:var(--r);padding:18px 20px;margin-bottom:20px}
+.nt-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.nt-label{font-family:var(--fc);font-size:.7rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--og);display:flex;align-items:center;gap:7px}
+.nt-label::before{content:'';width:8px;height:8px;background:var(--og);border-radius:50%;animation:pulse2 1.5s ease infinite}
+@keyframes pulse2{0%,100%{opacity:1}50%{opacity:.3}}
+.nt-body{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;flex-wrap:wrap}
+.nt-field{background:var(--bk3);border:1px solid var(--bor);border-radius:8px;padding:11px 13px}
+.nt-field-lbl{font-family:var(--fc);font-size:.58rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.3);display:block;margin-bottom:4px}
+.nt-field-val{font-family:var(--fc);font-size:.9rem;font-weight:800;color:var(--wh)}
+.nt-actions{display:flex;gap:9px;margin-top:12px}
+
+/* APPOINTMENT LIST */
+.appt-list{display:flex;flex-direction:column;gap:11px}
+.appt-card{background:var(--bk2);border:1px solid var(--bor);border-radius:var(--r);overflow:hidden;transition:all .2s}
+.appt-card:hover{border-color:rgba(52,199,89,.25)}
+.appt-card.today{border-left:3px solid var(--green)}
+.appt-card.upcoming{border-left:3px solid var(--blue)}
+.appt-card.completed-c{border-left:3px solid rgba(255,255,255,.15);opacity:.7}
+.appt-card.extended-c{border-left:3px solid var(--teal)}
+.appt-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--bor)}
+.appt-num{font-family:var(--fc);font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.28)}
+.appt-status-badges{display:flex;gap:6px;align-items:center}
+.status-badge{font-family:var(--fc);font-size:.63rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:4px;white-space:nowrap}
+.s-pending{background:rgba(255,215,0,.1);color:var(--yellow);border:1px solid rgba(255,215,0,.2)}
+.s-confirmed{background:rgba(52,199,89,.1);color:var(--green);border:1px solid rgba(52,199,89,.2)}
+.s-completed{background:rgba(0,122,255,.1);color:var(--blue);border:1px solid rgba(0,122,255,.2)}
+.s-cancelled{background:rgba(255,59,48,.1);color:#ff6b6b;border:1px solid rgba(255,59,48,.2)}
+.s-extended{background:rgba(90,200,250,.1);color:var(--teal);border:1px solid rgba(90,200,250,.2)}
+.ext-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(90,200,250,.1);color:var(--teal);border:1px solid rgba(90,200,250,.2);border-radius:4px;padding:2px 8px;font-family:var(--fc);font-size:.58rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.appt-body{padding:14px 16px;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;align-items:start}
+.appt-field-lbl{font-family:var(--fc);font-size:.58rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.3);display:block;margin-bottom:3px}
+.appt-field-val{font-family:var(--fc);font-size:.86rem;font-weight:800;color:var(--wh)}
+.appt-cust{font-family:var(--fc);font-size:.92rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.appt-footer{padding:10px 16px;background:rgba(255,255,255,.02);border-top:1px solid var(--bor);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.appt-location{display:flex;align-items:center;gap:7px;font-size:.8rem;color:var(--wm)}
+.appt-location strong{color:var(--wh)}
+.appt-footer-actions{display:flex;gap:7px}
+
+/* EXTENSION NOTE */
+.ext-note{background:rgba(90,200,250,.06);border:1px solid rgba(90,200,250,.18);border-radius:6px;padding:9px 12px;margin:0 16px 12px;display:flex;align-items:center;gap:9px;font-size:.78rem;color:var(--teal)}
+.ext-note strong{color:var(--wh)}
+
+/* MINI CALENDAR */
+.mini-cal-wrap{background:var(--bk2);border:1px solid var(--bor);border-radius:var(--r);padding:18px}
+.mc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.mc-month{font-family:var(--fd);font-size:1.2rem;letter-spacing:.04em;color:var(--green)}
+.mc-nav{background:none;border:none;color:var(--green);cursor:pointer;font-size:1rem;padding:3px 7px;border-radius:6px;transition:background .2s}
+.mc-nav:hover{background:rgba(52,199,89,.1)}
+.mc-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.mc-dow{font-family:var(--fc);font-size:.58rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.28);text-align:center;padding:3px 0}
+.mc-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:5px;font-family:var(--fc);font-size:.75rem;font-weight:700;cursor:default;transition:all .15s;border:1px solid transparent;position:relative}
+.mc-day.today{border-color:rgba(52,199,89,.4);color:var(--green);background:rgba(52,199,89,.08)}
+.mc-day.has-trip::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;background:var(--og);border-radius:50%}
+.mc-day.has-ext::after{background:var(--teal)}
+.mc-day.empty{cursor:default}
+
+/* HISTORY TABLE */
+.table-wrap{background:var(--bk2);border:1px solid var(--bor);border-radius:var(--r);overflow:hidden}
+.data-table{width:100%;border-collapse:collapse}
+.data-table th{background:var(--bk3);padding:10px 14px;font-family:var(--fc);font-size:.64rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35);text-align:left;border-bottom:1px solid var(--bor)}
+.data-table td{padding:12px 14px;font-size:.85rem;color:var(--wm);border-bottom:1px solid var(--bor);vertical-align:middle}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:rgba(255,255,255,.02)}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);z-index:500;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bk2);border:1px solid rgba(52,199,89,.25);border-radius:18px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;animation:mIn .25s ease}
+@keyframes mIn{from{opacity:0;transform:scale(.94) translateY(14px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-header{padding:18px 20px 14px;border-bottom:1px solid var(--bor);display:flex;align-items:center;justify-content:space-between}
+.modal-header h3{font-family:var(--fd);font-size:1.3rem;letter-spacing:.04em}
+.modal-header h3 span{color:var(--green)}
+.modal-close{width:26px;height:26px;background:var(--bk4);border:1px solid var(--bor);border-radius:50%;color:var(--wm);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.85rem;transition:all .18s}
+.modal-close:hover{background:var(--red);border-color:transparent;color:#fff}
+.modal-body{padding:18px 20px}
+.modal-footer{padding:13px 20px;border-top:1px solid var(--bor);display:flex;gap:9px;justify-content:flex-end}
+
+/* FORM */
+.form-group{margin-bottom:12px}
+.form-label{display:block;font-family:var(--fc);font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:5px}
+.form-input,.form-select,.form-textarea{width:100%;background:var(--bk4);border:1.5px solid var(--bor);border-radius:var(--rs);padding:10px 12px;font-family:var(--fb);font-size:.88rem;color:var(--wh);transition:border-color .2s}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(52,199,89,.1)}
+.form-input::placeholder,.form-textarea::placeholder{color:rgba(255,255,255,.2)}
+.form-textarea{resize:vertical;min-height:70px}
+.form-select{appearance:none;cursor:pointer}
+.form-select option{background:var(--bk3)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+
+/* COST BOX */
+.cost-box{background:rgba(255,107,0,.07);border:1px solid var(--bor-og);border-radius:var(--rs);padding:13px 15px;text-align:center;margin-top:4px}
+.cost-lbl{font-family:var(--fc);font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,107,0,.7);margin-bottom:4px}
+.cost-val{font-family:var(--fd);font-size:2rem;color:var(--og);letter-spacing:.04em}
+
+/* BUTTONS */
+.btn-green{display:inline-flex;align-items:center;gap:5px;background:rgba(52,199,89,.1);border:1px solid rgba(52,199,89,.2);border-radius:var(--rs);padding:7px 13px;font-family:var(--fc);font-size:.76rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--green);transition:all .18s}
+.btn-green:hover{background:rgba(52,199,89,.2)}
+.btn-og{display:inline-flex;align-items:center;gap:5px;background:var(--og);border:none;border-radius:var(--rs);padding:8px 16px;font-family:var(--fc);font-size:.8rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--bk);transition:all .18s}
+.btn-og:hover{background:var(--og2)}
+.btn-teal{display:inline-flex;align-items:center;gap:5px;background:rgba(90,200,250,.1);border:1px solid rgba(90,200,250,.2);border-radius:var(--rs);padding:7px 13px;font-family:var(--fc);font-size:.76rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);transition:all .18s}
+.btn-teal:hover{background:rgba(90,200,250,.2)}
+.btn-ghost{display:inline-flex;align-items:center;gap:5px;background:none;border:1px solid var(--bor);border-radius:var(--rs);padding:7px 13px;font-family:var(--fc);font-size:.76rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--wm);transition:all .18s}
+.btn-ghost:hover{border-color:var(--green);color:var(--green)}
+.btn-red{display:inline-flex;align-items:center;gap:5px;background:rgba(255,59,48,.1);border:1px solid rgba(255,59,48,.2);border-radius:var(--rs);padding:7px 13px;font-family:var(--fc);font-size:.76rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#ff6b6b;transition:all .18s}
+.btn-red:hover{background:rgba(255,59,48,.2)}
+
+/* TOAST */
+.toast{position:fixed;bottom:26px;right:26px;background:var(--bk2);border:1px solid var(--green);border-radius:var(--r);padding:13px 18px;font-family:var(--fc);font-size:.86rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--green);z-index:9999;box-shadow:var(--sh);display:none;align-items:center;gap:9px;max-width:300px;animation:slideUp .25s ease}
+.toast.show{display:flex}
+.toast.error{border-color:var(--red);color:#ff6b6b}
+@keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+.empty-state{text-align:center;padding:50px 20px;color:rgba(255,255,255,.25)}
+.empty-state .ei{font-size:2.8rem;margin-bottom:10px}
+.empty-state p{font-family:var(--fc);font-size:.86rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+
+/* PANEL HEADER */
+.panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.panel-header h2{font-family:var(--fd);font-size:1.5rem;letter-spacing:.04em}
+.panel-header h2 span{color:var(--green)}
+.panel-sub{font-family:var(--fc);font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--wm);margin-top:2px}
+
+/* FILTER CHIPS */
+.filter-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.fchip{font-family:var(--fc);font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:5px 13px;border-radius:16px;border:1px solid var(--bor);color:rgba(255,255,255,.38);cursor:pointer;transition:all .2s}
+.fchip:hover,.fchip.on{background:rgba(52,199,89,.1);border-color:var(--green);color:var(--green)}
+
+@media(max-width:900px){.nt-body{grid-template-columns:1fr 1fr}.appt-body{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.nt-body,.appt-body{grid-template-columns:1fr}.panel{padding:14px}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-logo">
+      <div class="brand-icon">🚗</div>
+      <div><div class="brand-name">DAVE</div><div class="brand-sub">Driver Panel</div></div>
+    </div>
+    <div class="driver-badge"><div class="drv-dot"></div><span>🚗 Driver Access</span></div>
+  </div>
+
+  <!-- DRIVER PROFILE -->
+  <div class="drv-profile">
+    <div class="drv-avatar-big" id="drvAvatarBig">
+      <input type="file" accept="image/*" onchange="changeAvatar(this)" title="Change photo">
+      <img id="drvAvatarImg" src="" alt="">
+      <span id="drvAvatarInitial">?</span>
+    </div>
+    <div class="drv-name" id="drvNameSidebar">Driver</div>
+    <div class="drv-role-pill" id="drvRolePill">🚗 Driver</div>
+    <div class="drv-status-row">
+      <div class="drv-stat-mini"><span class="dsm-num" id="drvTotalTrips">0</span><span class="dsm-lbl">Trips</span></div>
+      <div class="drv-stat-mini"><span class="dsm-num" id="drvTodayTrips">0</span><span class="dsm-lbl">Today</span></div>
+      <div class="drv-stat-mini"><span class="dsm-num" id="drvExtTrips">0</span><span class="dsm-lbl">Ext.</span></div>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">My Dashboard</div>
+    <button class="nav-item active" onclick="switchTab('today')">
+      <span class="nav-icon">☀️</span> Today
+      <span class="nav-count nc-og" id="todayCount">0</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('appointments')">
+      <span class="nav-icon">📅</span> Appointments
+      <span class="nav-count nc-green" id="apptCount">0</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('extensions')">
+      <span class="nav-icon">⏳</span> Extensions
+      <span class="nav-count nc-teal" id="drvExtCount">0</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('history')">
+      <span class="nav-icon">📜</span> Trip History
+      <span class="nav-count nc-yellow" id="histCount">0</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('profile')">
+      <span class="nav-icon">👤</span> My Profile
+    </button>
+  </nav>
+
+  <div class="sidebar-footer">
+    <button class="btn-status on-duty" id="statusToggle" onclick="toggleDuty()">🟢 On Duty — Tap to Change</button>
+    <button class="btn-logout" onclick="doLogout()">🚪 Sign Out</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main-content">
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1 id="topbarTitle">TODAY'S <span>TRIPS</span></h1>
+      <span class="topbar-sub" id="topbarSub">Your schedule for today</span>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-time" id="liveTime"></div>
+      <div class="duty-indicator di-on" id="topDutyIndicator">🟢 On Duty</div>
+    </div>
+  </div>
+
+  <!-- ══ TODAY ══ -->
+  <div class="panel active" id="panel-today">
+    <!-- Today Banner -->
+    <div class="today-banner">
+      <div>
+        <div style="font-family:var(--fc);font-size:.66rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:rgba(52,199,89,.7);margin-bottom:4px">Today</div>
+        <div class="tb-date" id="todayDateStr">—</div>
+      </div>
+      <div>
+        <div class="tb-label">Next Appointment</div>
+        <div class="tb-next" id="nextApptStr">No trips scheduled today</div>
+      </div>
+      <div class="tb-dots">
+        <div class="tb-dot"><span class="tb-dot-num" id="tbPending">0</span><span class="tb-dot-lbl">Pending</span></div>
+        <div class="tb-dot"><span class="tb-dot-num" id="tbConfirmed">0</span><span class="tb-dot-lbl">Confirmed</span></div>
+        <div class="tb-dot"><span class="tb-dot-num" id="tbDone">0</span><span class="tb-dot-lbl">Done</span></div>
+      </div>
+    </div>
+
+    <!-- Next Active Trip -->
+    <div id="nextTripCard" style="display:none">
+      <div class="next-trip">
+        <div class="nt-header">
+          <div class="nt-label">Next Active Trip</div>
+          <div id="ntStatus"></div>
+        </div>
+        <div class="nt-body">
+          <div class="nt-field"><span class="nt-field-lbl">👤 Customer</span><span class="nt-field-val" id="ntCust">—</span></div>
+          <div class="nt-field"><span class="nt-field-lbl">🚗 Car</span><span class="nt-field-val" id="ntCar">—</span></div>
+          <div class="nt-field"><span class="nt-field-lbl">📅 Pick-up</span><span class="nt-field-val" id="ntDate">—</span></div>
+          <div class="nt-field"><span class="nt-field-lbl">⏱️ Duration</span><span class="nt-field-val" id="ntDur">—</span></div>
+        </div>
+        <div class="nt-field" style="background:var(--bk3);border:1px solid var(--bor);border-radius:8px;padding:10px 13px;margin-top:10px"><span class="nt-field-lbl">📍 Pick-up Location</span><span class="nt-field-val" id="ntLoc">—</span></div>
+        <div class="nt-field" style="background:var(--bk3);border:1px solid var(--bor);border-radius:8px;padding:10px 13px;margin-top:8px"><span class="nt-field-lbl">🏁 Drop-off Location</span><span class="nt-field-val" id="ntDropLoc">—</span></div>
+        <div class="nt-actions">
+          <button class="btn-green" id="ntCompleteBtn" onclick="">✅ Mark Complete</button>
+          <button class="btn-teal" onclick="openExtModalForTrip()">⏳ Request Extension</button>
+          <button class="btn-ghost" onclick="switchTab('appointments')">📋 View All</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Today's trips list -->
+    <div class="panel-header">
+      <div><h2>Today's <span>Schedule</span></h2></div>
+    </div>
+    <div id="todayApptList"></div>
+  </div>
+
+  <!-- ══ APPOINTMENTS ══ -->
+  <div class="panel" id="panel-appointments">
+    <div class="panel-header">
+      <div><h2>All <span>Appointments</span></h2><div class="panel-sub">Your full schedule — car, date, location, hours/days</div></div>
+    </div>
+    <div class="filter-chips">
+      <div class="fchip on" onclick="filterAppts('all',this)">All</div>
+      <div class="fchip" onclick="filterAppts('today',this)">Today</div>
+      <div class="fchip" onclick="filterAppts('upcoming',this)">Upcoming</div>
+      <div class="fchip" onclick="filterAppts('Confirmed',this)">Confirmed</div>
+      <div class="fchip" onclick="filterAppts('Completed',this)">Completed</div>
+    </div>
+    <div class="appt-list" id="apptList"></div>
+  </div>
+
+  <!-- ══ EXTENSIONS ══ -->
+  <div class="panel" id="panel-extensions">
+    <div class="panel-header">
+      <div><h2>My <span>Extensions</span></h2><div class="panel-sub">Trips extended by customer request</div></div>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Customer</th><th>Car</th><th>Original End</th><th>Extra Time</th><th>New End</th><th>Extra Cost</th><th>Status</th></tr></thead>
+        <tbody id="drvExtTbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ HISTORY ══ -->
+  <div class="panel" id="panel-history">
+    <div class="panel-header">
+      <div><h2>Trip <span>History</span></h2><div class="panel-sub">All completed & cancelled trips</div></div>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Date</th><th>Customer</th><th>Car</th><th>Pick-up</th><th>Drop-off</th><th>Duration</th><th>Extensions</th><th>Status</th></tr></thead>
+        <tbody id="historyTbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ PROFILE ══ -->
+  <div class="panel" id="panel-profile">
+    <div class="panel-header">
+      <div><h2>My <span>Profile</span></h2></div>
+    </div>
+    <div style="display:grid;grid-template-columns:300px 1fr;gap:18px;align-items:start">
+      <div style="background:var(--bk2);border:1px solid rgba(52,199,89,.18);border-radius:var(--r);padding:24px;text-align:center">
+        <div style="width:90px;height:90px;border-radius:50%;background:var(--green);border:3px solid rgba(52,199,89,.4);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:2.5rem;color:var(--bk);margin:0 auto 14px;overflow:hidden;position:relative" id="profileAvatarWrap">
+          <input type="file" accept="image/*" onchange="changeAvatar(this)" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%">
+          <img id="profileAvatarImg" src="" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none">
+          <span id="profileInitial">?</span>
+        </div>
+        <div style="font-family:var(--fc);font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:6px">Click photo to change</div>
+        <div class="drv-role-pill" id="profileRolePill" style="justify-content:center;margin-bottom:12px">🚗 Driver</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="background:var(--bk3);border:1px solid var(--bor);border-radius:8px;padding:11px;text-align:left">
+            <div style="font-family:var(--fc);font-size:.6rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:3px">Total Trips</div>
+            <div style="font-family:var(--fd);font-size:1.6rem;color:var(--yellow)" id="profileTotalTrips">0</div>
+          </div>
+          <div style="background:var(--bk3);border:1px solid var(--bor);border-radius:8px;padding:11px;text-align:left">
+            <div style="font-family:var(--fc);font-size:.6rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:3px">Extensions Handled</div>
+            <div style="font-family:var(--fd);font-size:1.6rem;color:var(--teal)" id="profileExtCount">0</div>
+          </div>
+        </div>
+      </div>
+      <div style="background:var(--bk2);border:1px solid var(--bor);border-radius:var(--r);padding:22px">
+        <div style="font-family:var(--fd);font-size:1.1rem;letter-spacing:.04em;margin-bottom:16px;color:var(--green)">Driver Information</div>
+        <div class="form-row" style="margin-bottom:12px">
+          <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="profName" placeholder="Your full name" readonly></div>
+          <div class="form-group"><label class="form-label">Phone Number</label><input class="form-input" id="profPhone" placeholder="—" readonly></div>
+        </div>
+        <div class="form-row" style="margin-bottom:12px">
+          <div class="form-group"><label class="form-label">Role</label><input class="form-input" id="profRole" placeholder="—" readonly></div>
+          <div class="form-group"><label class="form-label">Status</label><input class="form-input" id="profStatus" placeholder="—" readonly></div>
+        </div>
+        <div class="form-row" style="margin-bottom:12px">
+          <div class="form-group"><label class="form-label">License Number</label><input class="form-input" id="profLicense" placeholder="—" readonly></div>
+          <div class="form-group"><label class="form-label">Address</label><input class="form-input" id="profAddress" placeholder="—" readonly></div>
+        </div>
+        <div style="background:rgba(52,199,89,.06);border:1px solid rgba(52,199,89,.18);border-radius:8px;padding:12px 14px;font-size:.82rem;color:rgba(255,255,255,.45);line-height:1.7">
+          ℹ️ To update your profile info, please contact the Manager or Owner.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EXTENSION MODAL -->
+<div class="modal-overlay" id="extModal">
+  <div class="modal">
+    <div class="modal-header"><h3>Request <span>Extension</span></h3><button class="modal-close" onclick="closeModal('extModal')">✕</button></div>
+    <div class="modal-body">
+      <div style="background:rgba(52,199,89,.07);border:1px solid rgba(52,199,89,.18);border-radius:8px;padding:12px 14px;margin-bottom:14px">
+        <div style="font-family:var(--fc);font-size:.64rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(52,199,89,.7);margin-bottom:3px">Current Booking</div>
+        <div style="font-family:var(--fc);font-size:.9rem;font-weight:800" id="extModalBookingInfo">—</div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Extension Type</label>
+          <select class="form-select" id="extType" onchange="calcExtCost()">
+            <option value="hours">Extra Hours</option>
+            <option value="days">Extra Days</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Amount *</label>
+          <input class="form-input" id="extAmount" type="number" min="1" max="30" value="6" oninput="calcExtCost()">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">New End Date</label>
+        <input class="form-input" id="extNewEnd" type="date">
+      </div>
+      <div class="form-group">
+        <label class="form-label">New End Time</label>
+        <input class="form-input" id="extNewTime" type="time">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Customer's Reason</label>
+        <textarea class="form-textarea" id="extReason" placeholder="Why does the customer need more time?"></textarea>
+      </div>
+      <div class="cost-box">
+        <div class="cost-lbl">Estimated Extra Charge</div>
+        <div class="cost-val" id="extCostVal">₱0</div>
+        <div style="font-size:.7rem;color:rgba(255,255,255,.28);margin-top:4px" id="extCostNote">—</div>
+      </div>
+      <input type="hidden" id="extBookingId">
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeModal('extModal')">Cancel</button>
+      <button class="btn-teal" onclick="saveExtension()">⏳ Submit Extension</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✅ <span id="toastMsg">—</span></div>
+
+<script>
+// ── AUTH ──
+const staffUser = JSON.parse(sessionStorage.getItem('dave_staff_user') || localStorage.getItem('dave_admin_session') || 'null');
+if (!staffUser || staffUser.role !== 'driver') { window.location.href = 'Adminlogin.html'; }
+
+// ── LOAD EMPLOYEE RECORD ──
+const allEmployees = () => JSON.parse(localStorage.getItem('dave_employees') || '[]');
+let drvRecord = allEmployees().find(e => e.name?.toLowerCase() === staffUser?.username?.toLowerCase()) || null;
+
+// ── CLOCK ──
+function updateClock(){ document.getElementById('liveTime').textContent = new Date().toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit'}); }
+updateClock(); setInterval(updateClock, 1000);
+
+// ── TOAST ──
+function showToast(msg, isErr=false){
+  const t=document.getElementById('toast'), m=document.getElementById('toastMsg');
+  m.textContent=msg; t.className='toast show'+(isErr?' error':'');
+  setTimeout(()=>t.className='toast',3000);
+}
+
+// ── LOGOUT ──
+function doLogout(){ if(!confirm('Sign out?'))return; sessionStorage.removeItem('dave_staff_user'); localStorage.removeItem('dave_admin_session'); window.location.href='Adminlogin.html'; }
+
+// ── DATA ──
+const getBookings  = () => JSON.parse(localStorage.getItem('dave_bookings') || '[]');
+const saveBookings = a  => localStorage.setItem('dave_bookings', JSON.stringify(a));
+const getCars      = () => JSON.parse(localStorage.getItem('dave_admin_cars') || '[]');
+const getExtensions= () => JSON.parse(localStorage.getItem('dave_extensions') || '[]');
+const saveExtensions=a  => localStorage.setItem('dave_extensions', JSON.stringify(a));
+const php = n => '₱' + Number(n).toLocaleString();
+const genId = () => 'id_'+Date.now()+'_'+Math.random().toString(36).substr(2,5);
+
+// ── DUTY STATUS ──
+let isOnDuty = localStorage.getItem('dave_drv_duty_'+staffUser?.username) !== 'off';
+function toggleDuty(){
+  isOnDuty = !isOnDuty;
+  localStorage.setItem('dave_drv_duty_'+staffUser?.username, isOnDuty ? 'on' : 'off');
+  updateDutyUI();
+  showToast(isOnDuty ? 'You are now On Duty.' : 'You are now Off Duty.');
+}
+function updateDutyUI(){
+  const btn=document.getElementById('statusToggle');
+  const ind=document.getElementById('topDutyIndicator');
+  if(isOnDuty){
+    btn.textContent='🟢 On Duty — Tap to Change'; btn.className='btn-status on-duty';
+    ind.textContent='🟢 On Duty'; ind.className='duty-indicator di-on';
+  } else {
+    btn.textContent='⭕ Off Duty — Tap to Change'; btn.className='btn-status off-duty';
+    ind.textContent='⭕ Off Duty'; ind.className='duty-indicator di-off';
+  }
+}
+updateDutyUI();
+
+// ── DRIVER PROFILE SETUP ──
+function setupProfile(){
+  const name = drvRecord?.name || staffUser?.username || 'Driver';
+  const role = drvRecord?.role || 'Full-time Driver';
+  const initial = name.charAt(0).toUpperCase();
+  const isFullTime = role === 'Full-time Driver';
+
+  document.getElementById('drvNameSidebar').textContent = name;
+  document.getElementById('drvAvatarInitial').textContent = initial;
+  document.getElementById('profileInitial').textContent = initial;
+
+  const rolePill = `<span class="drv-role-pill ${isFullTime?'pill-ft':'pill-oc'}">${isFullTime?'🚗 Full-time Driver':'📞 On-call Driver'}</span>`;
+  document.getElementById('drvRolePill').outerHTML = rolePill;
+  document.getElementById('profileRolePill').outerHTML = rolePill.replace('id="drvRolePill"','id="profileRolePill"');
+
+  if (drvRecord) {
+    document.getElementById('profName').value = drvRecord.name || '';
+    document.getElementById('profPhone').value = drvRecord.phone || '';
+    document.getElementById('profRole').value = drvRecord.role || '';
+    document.getElementById('profStatus').value = drvRecord.status || '';
+    document.getElementById('profLicense').value = drvRecord.license || '';
+    document.getElementById('profAddress').value = drvRecord.address || '';
+    if (drvRecord.photo) {
+      ['drvAvatarImg','profileAvatarImg'].forEach(id=>{ const el=document.getElementById(id); el.src=drvRecord.photo; el.style.display='block'; });
+      ['drvAvatarInitial','profileInitial'].forEach(id=>{ const el=document.getElementById(id); if(el) el.style.display='none'; });
+    }
+  }
+}
+
+function changeAvatar(input){
+  const f=input.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=e=>{
+    const src=e.target.result;
+    ['drvAvatarImg','profileAvatarImg'].forEach(id=>{ const el=document.getElementById(id); el.src=src; el.style.display='block'; });
+    ['drvAvatarInitial','profileInitial'].forEach(id=>{ const el=document.getElementById(id); if(el) el.style.display='none'; });
+    if(drvRecord){ drvRecord.photo=src; const emps=allEmployees(); const idx=emps.findIndex(e=>e.id===drvRecord.id); if(idx>=0){ emps[idx].photo=src; localStorage.setItem('dave_employees',JSON.stringify(emps)); }}
+    showToast('Profile photo updated!');
+  };
+  r.readAsDataURL(f);
+}
+
+// ── TRIP / BOOKING HELPERS ──
+// "My" bookings = where driverName matches OR all confirmed/pending if driver not assigned
+function getMyBookings(){
+  return getBookings().filter(b => b.status !== 'Cancelled');
+}
+
+function isTodayStr(dateStr){
+  if(!dateStr) return false;
+  const today = new Date().toISOString().split('T')[0];
+  return dateStr === today;
+}
+
+function isUpcoming(dateStr){
+  if(!dateStr) return false;
+  const today = new Date().toISOString().split('T')[0];
+  return dateStr > today;
+}
+
+function formatDate(ds){
+  if(!ds) return '—';
+  return new Date(ds+'T00:00:00').toLocaleDateString('en-PH',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+}
+
+// ── TAB SWITCH ──
+const TAB_META={
+  today:{title:"TODAY'S",titleSpan:'TRIPS',sub:'Your schedule for today'},
+  appointments:{title:'ALL',titleSpan:'APPOINTMENTS',sub:'Your full schedule'},
+  extensions:{title:'MY',titleSpan:'EXTENSIONS',sub:'Customer extension requests'},
+  history:{title:'TRIP',titleSpan:'HISTORY',sub:'All completed trips'},
+  profile:{title:'MY',titleSpan:'PROFILE',sub:'Your driver information'},
+};
+function switchTab(tab){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('panel-'+tab).classList.add('active');
+  const btn=document.querySelector(`[onclick="switchTab('${tab}')"]`);
+  if(btn) btn.classList.add('active');
+  const m=TAB_META[tab]||{};
+  document.getElementById('topbarTitle').innerHTML=`${m.title||''} <span>${m.titleSpan||tab.toUpperCase()}</span>`;
+  document.getElementById('topbarSub').textContent=m.sub||'';
+  const r={today:renderToday,appointments:()=>renderAppts('all'),extensions:renderDrvExtensions,history:renderHistory,profile:setupProfile};
+  if(r[tab]) r[tab]();
+}
+
+// ── TODAY ──
+function renderToday(){
+  const today = new Date().toISOString().split('T')[0];
+  const d = new Date();
+  document.getElementById('todayDateStr').textContent = d.toLocaleDateString('en-PH',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+
+  const bookings = getMyBookings();
+  const todayBookings = bookings.filter(b => isTodayStr(b.pickupDate));
+  const pending = todayBookings.filter(b=>b.status==='Pending').length;
+  const confirmed = todayBookings.filter(b=>b.status==='Confirmed').length;
+  const done = todayBookings.filter(b=>b.status==='Completed').length;
+  const exts = getExtensions();
+
+  document.getElementById('tbPending').textContent = pending;
+  document.getElementById('tbConfirmed').textContent = confirmed;
+  document.getElementById('tbDone').textContent = done;
+  document.getElementById('todayCount').textContent = todayBookings.length;
+
+  // Counters for sidebar
+  const totalTrips = bookings.filter(b=>b.status==='Completed').length;
+  document.getElementById('drvTotalTrips').textContent = totalTrips;
+  document.getElementById('drvTodayTrips').textContent = todayBookings.length;
+  document.getElementById('drvExtTrips').textContent = exts.length;
+
+  // Next active trip
+  const next = todayBookings.find(b=>b.status==='Confirmed'||b.status==='Pending');
+  if(next){
+    document.getElementById('nextTripCard').style.display='block';
+    document.getElementById('ntCust').textContent = next.custName||'—';
+    document.getElementById('ntCar').textContent = next.carName||'—';
+    document.getElementById('ntDate').textContent = `${next.pickupTime||'—'}`;
+    document.getElementById('ntDur').textContent = next.durLabel||next.duration||'—';
+    document.getElementById('ntLoc').textContent = next.pickupLocation||next.custAddress||'Not specified';
+    document.getElementById('ntDropLoc').textContent = next.dropoffLocation||'Not specified';
+    document.getElementById('ntStatus').innerHTML = `<span class="status-badge s-${(next.status||'pending').toLowerCase()}">${next.status}</span>`;
+    document.getElementById('ntCompleteBtn').onclick = () => markComplete(next.id);
+    document.getElementById('nextApptStr').textContent = `${next.custName||'Customer'} — ${next.carName||'Car'} at ${next.pickupTime||'—'}`;
+  } else {
+    document.getElementById('nextTripCard').style.display='none';
+    document.getElementById('nextApptStr').textContent = 'No active trips today';
+  }
+
+  // Today's list
+  const list = document.getElementById('todayApptList');
+  if(!todayBookings.length){ list.innerHTML=`<div class="empty-state"><div class="ei">☀️</div><p>No trips scheduled today</p></div>`; return; }
+  list.innerHTML = '<div class="appt-list">'+todayBookings.map(b=>buildApptCard(b,exts)).join('')+'</div>';
+}
+
+function markComplete(id){
+  const bookings = getBookings();
+  const b = bookings.find(x=>x.id===id);
+  if(!b) return;
+  b.status = 'Completed'; b.completedAt = new Date().toISOString();
+  saveBookings(bookings);
+  showToast('Trip marked as completed!');
+  renderToday();
+}
+
+// ── APPOINTMENTS ──
+let apptFilter = 'all';
+function filterAppts(type, el){
+  document.querySelectorAll('.fchip').forEach(c=>c.classList.remove('on'));
+  if(el) el.classList.add('on');
+  apptFilter = type;
+  renderAppts(type);
+}
+function renderAppts(filter){
+  const bookings = getMyBookings();
+  const exts = getExtensions();
+  let list = bookings;
+  if(filter==='today') list=bookings.filter(b=>isTodayStr(b.pickupDate));
+  else if(filter==='upcoming') list=bookings.filter(b=>isUpcoming(b.pickupDate));
+  else if(filter==='Confirmed'||filter==='Completed') list=bookings.filter(b=>b.status===filter);
+  list=[...list].sort((a,b)=>(b.pickupDate||'').localeCompare(a.pickupDate||''));
+  const container = document.getElementById('apptList');
+  document.getElementById('apptCount').textContent = bookings.length;
+  if(!list.length){ container.innerHTML=`<div class="empty-state"><div class="ei">📅</div><p>No appointments found</p></div>`; return; }
+  container.innerHTML = list.map(b=>buildApptCard(b,exts)).join('');
+}
+
+function buildApptCard(b, exts){
+  const bExts = exts.filter(e=>e.bookingId===b.id);
+  const today = new Date().toISOString().split('T')[0];
+  let cardClass = 'appt-card';
+  if(isTodayStr(b.pickupDate)&&(b.status==='Confirmed'||b.status==='Pending')) cardClass+=' today';
+  else if(b.pickupDate>today) cardClass+=' upcoming';
+  else if(b.status==='Completed') cardClass+=' completed-c';
+  if(bExts.length) cardClass+=' extended-c';
+
+  const extBadge = bExts.length ? `<span class="ext-badge">⏳ +${bExts.length} ext</span>` : '';
+
+  return `<div class="${cardClass}">
+    <div class="appt-header">
+      <span class="appt-num">📋 ${b.ref||b.id?.slice(-6)||'—'}</span>
+      <div class="appt-status-badges">
+        ${extBadge}
+        <span class="status-badge s-${(b.status||'pending').toLowerCase()}">${b.status||'Pending'}</span>
+      </div>
+    </div>
+    ${bExts.map(e=>`<div class="ext-note">⏳ Extended: <strong>+${e.amount} ${e.type}</strong> — New end: <strong>${e.newEnd||'—'}</strong> · Extra: <strong>${php(e.extraCost)}</strong> · ${e.reason||'—'}</div>`).join('')}
+    <div class="appt-body">
+      <div><span class="appt-field-lbl">👤 Customer</span><span class="appt-field-val appt-cust">${b.custName||'—'}</span></div>
+      <div><span class="appt-field-lbl">🚗 Car</span><span class="appt-field-val">${b.carName||'—'}</span></div>
+      <div><span class="appt-field-lbl">📅 Pick-up Date</span><span class="appt-field-val">${formatDate(b.pickupDate)}</span></div>
+      <div><span class="appt-field-lbl">🕐 Pick-up Time</span><span class="appt-field-val">${b.pickupTime||'—'}</span></div>
+      <div><span class="appt-field-lbl">⏱️ Duration</span><span class="appt-field-val">${b.durLabel||b.duration||'—'}</span></div>
+      <div><span class="appt-field-lbl">🏁 Drop-off Date</span><span class="appt-field-val">${formatDate(b.dropoffDate)}</span></div>
+      <div><span class="appt-field-lbl">💰 Amount</span><span class="appt-field-val" style="color:var(--og)">${php(b.totalAmount||0)}</span></div>
+      <div><span class="appt-field-lbl">📞 Phone</span><span class="appt-field-val">${b.custPhone||'—'}</span></div>
+    </div>
+    <div class="appt-footer">
+      <div class="appt-location">📍 <div><div><strong>${b.pickupLocation||b.custAddress||'Pick-up: Not specified'}</strong></div><div style="font-size:.72rem;margin-top:2px">🏁 Drop-off: ${b.dropoffLocation||'Not specified'}</div></div></div>
+      <div class="appt-footer-actions">
+        ${b.status==='Confirmed'?`<button class="btn-green" onclick="markComplete('${b.id}')" style="font-size:.72rem">✅ Complete</button><button class="btn-teal" onclick="openExtModalFor('${b.id}')" style="font-size:.72rem">⏳ Extend</button>`:''}
+        ${b.status==='Pending'?`<span style="font-family:var(--fc);font-size:.7rem;color:var(--yellow);text-transform:uppercase">Awaiting Confirmation</span>`:''}
+        ${b.status==='Completed'?`<span style="font-family:var(--fc);font-size:.7rem;color:var(--green);text-transform:uppercase">✅ Completed ${b.completedAt?new Date(b.completedAt).toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit'}):''}</span>`:''}
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── EXTENSIONS ──
+let activeExtBookingId = null;
+
+function openExtModalForTrip(){
+  const bookings = getMyBookings();
+  const next = bookings.find(b=>b.status==='Confirmed'&&isTodayStr(b.pickupDate));
+  if(!next){showToast('No active trip to extend.',true);return;}
+  openExtModalFor(next.id);
+}
+function openExtModalFor(bookingId){
+  const b = getBookings().find(x=>x.id===bookingId);
+  if(!b) return;
+  activeExtBookingId = bookingId;
+  document.getElementById('extBookingId').value = bookingId;
+  document.getElementById('extModalBookingInfo').textContent = `${b.custName||'Customer'} — ${b.carName||'Car'} · ${b.durLabel||b.duration||'—'} · Ends: ${b.dropoffDate||'—'}`;
+  document.getElementById('extType').value = 'hours';
+  document.getElementById('extAmount').value = '6';
+  document.getElementById('extReason').value = '';
+  document.getElementById('extNewEnd').value = '';
+  document.getElementById('extNewTime').value = '';
+  document.getElementById('extCostVal').textContent = '₱0';
+  document.getElementById('extCostNote').textContent = '—';
+  calcExtCost();
+  document.getElementById('extModal').classList.add('open');
+}
+function calcExtCost(){
+  const bookingId = document.getElementById('extBookingId').value;
+  const b = getBookings().find(x=>x.id===bookingId);
+  const type = document.getElementById('extType').value;
+  const amount = parseInt(document.getElementById('extAmount').value)||0;
+  if(!b||!amount){document.getElementById('extCostVal').textContent='₱0';return;}
+  const car = getCars().find(c=>c.name===b.carName||c.id===b.carId);
+  let cost = 0;
+  if(car){ cost = type==='hours'?Math.ceil(amount/6)*car.price6hr:amount*car.price24hr; }
+  else { cost = type==='hours'?amount*200:amount*3000; }
+  document.getElementById('extCostVal').textContent = php(cost);
+  document.getElementById('extCostNote').textContent = `${amount} ${type} × rate = ${php(cost)}`;
+}
+function saveExtension(){
+  const bookingId = document.getElementById('extBookingId').value;
+  const b = getBookings().find(x=>x.id===bookingId);
+  if(!b){showToast('Booking not found.',true);return;}
+  const type = document.getElementById('extType').value;
+  const amount = parseInt(document.getElementById('extAmount').value);
+  if(!amount||amount<1){showToast('Enter a valid amount.',true);return;}
+  const car = getCars().find(c=>c.name===b.carName||c.id===b.carId);
+  let cost = 0;
+  if(car){ cost = type==='hours'?Math.ceil(amount/6)*car.price6hr:amount*car.price24hr; }
+  else { cost = type==='hours'?amount*200:amount*3000; }
+  const exts = getExtensions();
+  exts.unshift({
+    id:genId(), bookingId, custName:b.custName||'Customer', carName:b.carName||'Car',
+    originalEnd:b.dropoffDate||'—', type, amount, extraCost:cost,
+    reason:document.getElementById('extReason').value.trim(),
+    newEnd:document.getElementById('extNewEnd').value||'—',
+    newTime:document.getElementById('extNewTime').value||'—',
+    status:'Approved', loggedBy:staffUser?.username||'driver',
+    createdAt:new Date().toISOString(),
+  });
+  saveExtensions(exts);
+  // Update booking
+  const bookings=getBookings();
+  const bk=bookings.find(x=>x.id===bookingId);
+  if(bk){bk.totalAmount=(bk.totalAmount||0)+cost;bk.durLabel=(bk.durLabel||bk.duration||'')+(type==='hours'?` +${amount}hrs`:` +${amount}d`);saveBookings(bookings);}
+  closeModal('extModal');
+  showToast('Extension submitted! ✓');
+  renderToday();renderDrvExtensions();
+}
+function renderDrvExtensions(){
+  const exts = getExtensions();
+  const tbody = document.getElementById('drvExtTbody');
+  document.getElementById('drvExtCount').textContent = exts.length;
+  if(!exts.length){tbody.innerHTML=`<tr><td colspan="7"><div class="empty-state"><div class="ei">⏳</div><p>No extensions yet</p></div></td></tr>`;return;}
+  tbody.innerHTML=exts.map(e=>`<tr>
+    <td><strong>${e.custName}</strong></td>
+    <td>${e.carName}</td>
+    <td style="font-size:.8rem;color:var(--wm)">${e.originalEnd}</td>
+    <td><strong style="color:var(--teal)">+${e.amount} ${e.type}</strong></td>
+    <td style="color:var(--wh)">${e.newEnd||'—'} ${e.newTime||''}  </td>
+    <td style="color:var(--og);font-weight:700;font-family:var(--fc)">${php(e.extraCost)}</td>
+    <td><span class="status-badge s-${(e.status||'approved').toLowerCase()}">${e.status||'Approved'}</span></td>
+  </tr>`).join('');
+}
+
+// ── HISTORY ──
+function renderHistory(){
+  const bookings = getBookings().filter(b=>b.status==='Completed'||b.status==='Cancelled');
+  const exts = getExtensions();
+  const tbody = document.getElementById('historyTbody');
+  document.getElementById('histCount').textContent = bookings.length;
+  if(!bookings.length){tbody.innerHTML=`<tr><td colspan="8"><div class="empty-state"><div class="ei">📜</div><p>No trip history yet</p></div></td></tr>`;return;}
+  tbody.innerHTML=[...bookings].reverse().map(b=>{
+    const bExts = exts.filter(e=>e.bookingId===b.id).length;
+    return `<tr>
+      <td style="font-size:.8rem;color:var(--wm)">${formatDate(b.pickupDate)}</td>
+      <td><strong>${b.custName||'—'}</strong></td>
+      <td>${b.carName||'—'}</td>
+      <td style="font-size:.8rem">${b.pickupLocation||b.custAddress||'—'}</td>
+      <td style="font-size:.8rem">${b.dropoffLocation||'—'}</td>
+      <td style="font-size:.82rem">${b.durLabel||b.duration||'—'}</td>
+      <td>${bExts?`<span class="ext-badge">⏳ +${bExts}</span>`:'-'}</td>
+      <td><span class="status-badge s-${(b.status||'completed').toLowerCase()}">${b.status}</span></td>
+    </tr>`;}).join('');
+  document.getElementById('profileTotalTrips').textContent = bookings.filter(b=>b.status==='Completed').length;
+  document.getElementById('profileExtCount').textContent = exts.length;
+}
+
+// ── MODAL ──
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
+
+// ── INIT ──
+setupProfile();
+renderToday();
+</script>
+</body>
+</html>

@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dave Car Rental Services — Dipolog City</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=Barlow+Condensed:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════
+   DAVE CAR RENTAL — HOMEPAGE
+   Colors: Orange #FF6B00 · Black #0A0A0A · Yellow #FFD700
+══════════════════════════════════════════════ */
+:root{
+  /* ── BASE ── */
+  --wh:#FFFFFF;
+  --bk:#0A0A0A;
+  --bk2:#111111;
+  --bk3:#1C1C1C;
+  --bk4:#2A2A2A;
+  --bk5:#3A3A3A;
+
+  /* ── ORANGE (MAIN BRAND) ── */
+  --og:#FF6B00;
+  --og2:#FF8A1F;
+  --og3:#CC4F00;
+
+  /* ── YELLOW (ACCENT ONLY) ── */
+  --yw:#FFD700;
+  --yw2:#FFC533;
+
+  /* ── TRANSPARENCY WHITE ── */
+  --wm:rgba(255,255,255,.65);
+  --wd:rgba(255,255,255,.08);
+  --wf:rgba(255,255,255,.12);
+
+  /* ── BORDERS ── */
+  --bor:rgba(255,255,255,.10);
+  --bor-og:rgba(255,107,0,.30);
+  --bor-yw:rgba(255,215,0,.18);
+
+  /* ── GLOWS (PREMIUM LOOK) ── */
+  --og-glow:rgba(255,107,0,.20);
+  --yw-glow:rgba(255,215,0,.15);
+
+  /* ── TYPOGRAPHY ── */
+  --fd:'Bebas Neue',sans-serif;
+  --fc:'Barlow Condensed',sans-serif;
+  --fb:'Barlow',sans-serif;
+
+  /* ── LAYOUT ── */
+  --nav-h:70px;
+  --ticker-h:34px;
+
+  /* ── BORDER RADIUS ── */
+  --r:12px;
+  --rs:8px;
+  --rl:18px;
+
+  /* ── SHADOWS ── */
+  --sh:0 10px 40px rgba(0,0,0,.6);
+  --sh-og:0 10px 30px rgba(255,107,0,.25);
+}
+
+html{scroll-behavior:smooth}
+body{font-family:var(--fb);background:var(--bk);color:var(--wh);overflow-x:hidden;padding-top:calc(var(--ticker-h) + var(--nav-h))}
+a{text-decoration:none;color:inherit}ul{list-style:none}
+img{max-width:100%;display:block}button{cursor:pointer;font-family:var(--fb)}
+.container{max-width:1180px;margin:0 auto;padding:0 24px}
+.section{padding:96px 0}
+
+/* ── TICKER ── */
+.ticker-wrap{position:fixed;top:0;left:0;right:0;height:var(--ticker-h);background:var(--og);overflow:hidden;z-index:1001;display:flex;align-items:center}
+.ticker{display:flex;gap:60px;white-space:nowrap;animation:tickerMove 40s linear infinite;font-family:var(--fc);font-size:.76rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bk)}
+.ticker span{display:flex;align-items:center;gap:8px}
+.ticker span::after{content:'•';margin-left:30px;opacity:.35}
+@keyframes tickerMove{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── NAV ── */
+.nav{
+  position:fixed;
+  top:var(--ticker-h);
+  left:0;
+  right:0;
+  height:var(--nav-h);
+  z-index:1000;
+  background:var(--bk2);
+  border-bottom:2px solid var(--og);
+  transition:all .22s
+}
+
+.nav.scrolled{
+  background:rgba(10,10,10,.96);
+  backdrop-filter:blur(16px)
+}
+
+.nav-inner{
+  max-width:1180px;
+  margin:0 auto;
+  padding:0 24px;
+  height:100%;
+  display:flex;
+  align-items:center;
+  gap:32px
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  text-decoration:none
+}
+
+.logo-icon{
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--og);
+  box-shadow:0 4px 12px rgba(0,0,0,.3)
+}
+
+.logo-icon img{
+  width:100%;
+  height:100%;
+  object-fit:cover
+}
+
+.logo-text{
+  display:flex;
+  flex-direction:column;
+  line-height:1
+}
+
+.logo-main{
+  font-family:var(--fd);
+  font-size:1.5rem;
+  letter-spacing:.05em;
+  color:var(--og)
+}
+
+.logo-sub{
+  font-family:var(--fc);
+  font-size:.58rem;
+  font-weight:700;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.35);
+  margin-top:2px
+}
+
+.nav-links{
+  display:flex;
+  gap:28px;
+  margin-left:auto
+}
+
+.nav-links a{
+  font-family:var(--fc);
+  font-size:.92rem;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.55);
+  transition:color .22s;
+  position:relative
+}
+
+.nav-links a::after{
+  content:'';
+  position:absolute;
+  bottom:-4px;
+  left:0;
+  right:0;
+  height:2px;
+  background:var(--og);
+  transform:scaleX(0);
+  transition:transform .22s;
+  border-radius:2px
+}
+
+.nav-links a:hover{
+  color:var(--wh)
+}
+
+.nav-links a:hover::after{
+  transform:scaleX(1)
+}
+
+.nav-actions{
+  display:flex;
+  gap:10px;
+  margin-left:16px
+}
+
+.btn-ghost{
+  font-family:var(--fc);
+  font-size:.88rem;
+  font-weight:700;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.55);
+  padding:8px 18px;
+  border-radius:var(--rs);
+  border:1px solid var(--wf);
+  transition:all .22s
+}
+
+.btn-ghost:hover{
+  color:var(--wh);
+  border-color:rgba(255,255,255,.3)
+}
+
+.btn-orange{
+  font-family:var(--fc);
+  font-size:.88rem;
+  font-weight:800;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--bk);
+  background:var(--og);
+  padding:9px 22px;
+  border-radius:var(--rs);
+  border:none;
+  transition:all .22s;
+  display:inline-block
+}
+
+.btn-orange:hover{
+  background:var(--og2);
+  box-shadow:var(--sh-og);
+  transform:translateY(-1px)
+}
+
+.hamburger{
+  display:none;
+  flex-direction:column;
+  gap:5px;
+  background:none;
+  border:none;
+  margin-left:auto;
+  padding:4px
+}
+
+.hamburger span{
+  width:22px;
+  height:2px;
+  background:var(--wh);
+  border-radius:2px;
+  transition:all .22s;
+  display:block
+}
+
+.mob-menu{
+  display:none;
+  flex-direction:column;
+  padding:16px 24px 24px;
+  gap:14px;
+  background:var(--bk2);
+  border-top:1px solid var(--bor-og)
+}
+
+.mob-menu a{
+  font-family:var(--fc);
+  font-size:1rem;
+  font-weight:700;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.65)
+}
+
+.mob-menu.open{
+  display:flex
+}
+
+/* ── HERO ── */
+.hero{min-height:calc(100vh - var(--ticker-h) - var(--nav-h));display:grid;grid-template-columns:1fr 1fr;align-items:center;position:relative;overflow:hidden;padding:60px 100px 60px}
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-stripes{position:absolute;inset:0;background:repeating-linear-gradient(-60deg,transparent,transparent 60px,rgba(255,107,0,.016) 60px,rgba(255,107,0,.016) 62px)}
+.hero-glow{position:absolute;top:-100px;right:-100px;width:700px;height:700px;background:radial-gradient(circle,rgba(255,107,0,.08) 0%,transparent 70%)}
+.hero-content{position:relative;z-index:1}
+.hero-eyebrow{display:flex;align-items:center;gap:10px;font-family:var(--fc);font-size:.78rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--og);margin-bottom:20px;animation:fadeUp .6s ease .1s both}
+.blink-dot{width:8px;height:8px;background:var(--og);border-radius:50%;animation:blink 1.5s ease infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.hero-title{font-family:var(--fd);font-size:clamp(4rem,7vw,7rem);line-height:.9;letter-spacing:.02em;color:var(--wh);margin-bottom:22px;animation:fadeUp .6s ease .2s both}
+.hero-title .og{color:var(--og)}.hero-title .yw{color:var(--yw)}
+.hero-desc{font-size:1rem;color:var(--wm);line-height:1.75;max-width:440px;margin-bottom:34px;animation:fadeUp .6s ease .3s both}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:44px;animation:fadeUp .6s ease .4s both}
+.btn-hero{display:inline-flex;align-items:center;gap:10px;font-family:var(--fc);font-size:1.05rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--bk);background:var(--og);padding:16px 34px;border-radius:var(--rs);border:none;transition:all .22s}
+.btn-hero:hover{background:var(--og2);box-shadow:var(--sh-og);transform:translateY(-2px)}
+.btn-hero-out{display:inline-flex;align-items:center;font-family:var(--fc);font-size:1.05rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--wh);padding:16px 34px;border-radius:var(--rs);border:2px solid var(--wf);transition:all .22s}
+.btn-hero-out:hover{border-color:var(--wh)}
+.hero-trust{display:flex;gap:20px;flex-wrap:wrap;animation:fadeUp .6s ease .5s both}
+.trust-badge{font-family:var(--fc);font-size:.72rem;font-weight:700;letter-spacing:.06em;color:rgba(255,255,255,.65);background:var(--wd);border:1px solid var(--wf);padding:6px 14px;border-radius:4px;display:flex;align-items:center;gap:6px}
+.hero-visual{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;animation:fadeIn .8s ease .4s both}
+.hero-car-wrap{position:relative;width:100%;max-width:520px;height:340px;display:flex;align-items:center;justify-content:center}
+.big-car-emoji{font-size:10rem;filter:drop-shadow(0 20px 60px rgba(255,107,0,.2));animation:carFloat 3s ease-in-out infinite;position:relative;z-index:2}
+@keyframes carFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.road{position:absolute;bottom:20px;left:5%;right:5%;height:3px;background:linear-gradient(90deg,transparent,var(--og),transparent);border-radius:2px}
+.float-card{position:absolute;background:var(--bk3);border:1px solid var(--bor-og);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:12px;font-size:.78rem;z-index:3;box-shadow:var(--sh)}
+.float-card-1{top:20px;right:-20px;animation:float1 4s ease-in-out infinite}
+.float-card-2{bottom:50px;left:-20px;animation:float2 3.5s ease-in-out infinite}
+@keyframes float1{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes float2{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.fc-emoji{font-size:1.8rem}.fc-name{font-family:var(--fc);font-size:.85rem;font-weight:700}.fc-sub{font-size:.7rem;color:var(--wm)}.fc-price{font-family:var(--fc);font-size:.95rem;font-weight:800;color:var(--og);white-space:nowrap}
+.stat-pill{background:var(--og);border-radius:10px;padding:11px 18px;text-align:center;position:absolute;z-index:3;box-shadow:var(--sh-og)}
+.sp1{bottom:50px;right:10px;animation:float1 3.5s ease-in-out .5s infinite}
+.sp-num{font-family:var(--fd);font-size:1.5rem;color:var(--bk);line-height:1}
+.sp-lbl{font-family:var(--fc);font-size:.62rem;font-weight:700;color:rgba(0,0,0,.6);text-transform:uppercase;letter-spacing:.08em}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* ── PRICING STRIP ── */
+.pricing-strip{background:var(--bk2);border-top:1px solid var(--bor-og);border-bottom:1px solid var(--bor-og);padding:0}
+.strip-inner{display:flex;align-items:center;justify-content:space-between;padding:26px 0;gap:20px}
+.strip-item{display:flex;align-items:center;gap:14px;flex:1}
+.strip-icon{font-size:1.6rem}
+.strip-item>div{display:flex;flex-direction:column}
+.strip-item>div strong{font-family:var(--fc);font-size:.98rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+.strip-item>div span{font-size:.75rem;color:var(--wm)}
+.strip-from{font-family:var(--fc);font-size:1.1rem;font-weight:800;color:var(--og);margin-left:auto}
+.strip-div{width:1px;height:46px;background:var(--bor);flex-shrink:0}
+
+/* ── SECTION HEADERS ── */
+.sec-label{font-family:var(--fc);font-size:.75rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--og);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.sec-label::before{content:'//';opacity:.45}
+.sec-title{font-family:var(--fd);font-size:clamp(2.4rem,4vw,3.4rem);line-height:.95;letter-spacing:.02em;color:var(--wh)}
+.sec-title span{color:var(--og)}
+.sec-desc{font-size:.95rem;color:var(--wm);max-width:500px;line-height:1.75;margin-top:12px}
+.sec-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:48px}
+.sec-header-center{text-align:center;margin-bottom:52px}
+.sec-header-center .sec-label{justify-content:center}
+
+/* ── PROMOS SECTION ── */
+.promos-section{background:var(--bk2);border-top:1px solid var(--bor);border-bottom:1px solid var(--bor)}
+.promo-banner{position:relative;background:linear-gradient(135deg,var(--og) 0%,#ff3d00 100%);border-radius:var(--rl);padding:36px 40px;overflow:hidden;margin-bottom:22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:24px}
+.promo-banner::before{content:'🔥';position:absolute;right:40px;top:50%;transform:translateY(-50%);font-size:8rem;opacity:.1}
+.promo-banner-left{}
+.promo-banner-eyebrow{font-family:var(--fc);font-size:.68rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;background:rgba(0,0,0,.2);color:rgba(255,255,255,.9);padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:12px}
+.promo-banner-title{font-family:var(--fd);font-size:clamp(2rem,4vw,3.2rem);color:var(--wh);line-height:.9;margin-bottom:8px}
+.promo-banner-desc{font-size:.9rem;color:rgba(255,255,255,.8);line-height:1.65;max-width:420px}
+.promo-banner-right{text-align:center;flex-shrink:0}
+.promo-countdown{background:rgba(0,0,0,.2);border-radius:12px;padding:16px 24px;min-width:180px}
+.promo-valid{font-family:var(--fc);font-size:.68rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.7);display:block;margin-bottom:6px}
+.promo-date{font-family:var(--fd);font-size:1.6rem;color:var(--wh);line-height:1}
+.promos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.promo-card{border-radius:var(--r);padding:22px;position:relative;overflow:hidden;cursor:pointer;transition:transform .2s}
+.promo-card:hover{transform:translateY(-3px)}
+.pc-1{background:linear-gradient(135deg,#1a0000,#2d0a0a);border:1px solid rgba(255,59,48,.2)}
+.pc-2{background:linear-gradient(135deg,#001a00,#0a2d0a);border:1px solid rgba(52,199,89,.2)}
+.pc-3{background:linear-gradient(135deg,#00001a,#0a0a2d);border:1px solid rgba(100,100,255,.2)}
+.pc-4{background:linear-gradient(135deg,#1a1500,#2d2600);border:1px solid rgba(255,215,0,.2)}
+.pc-5{background:linear-gradient(135deg,#150018,#2a0032);border:1px solid rgba(180,100,255,.2)}
+.promo-card-tag{font-family:var(--fc);font-size:.62rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;padding:3px 10px;border-radius:4px;display:inline-block;margin-bottom:10px}
+.promo-card-disc{font-family:var(--fd);font-size:2.8rem;line-height:1;margin-bottom:6px}
+.promo-card-name{font-family:var(--fc);font-size:.9rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+.promo-card-desc{font-size:.78rem;color:var(--wm);line-height:1.6;margin-bottom:10px}
+.promo-card-date{font-size:.7rem;color:rgba(255,255,255,.3);font-family:var(--fc);font-weight:700;letter-spacing:.04em}
+.promo-no-promo{text-align:center;padding:48px;color:var(--wm);font-size:.9rem}
+
+/* ── FLEET SECTION ── */
+.fleet-section{background:var(--bk)}
+.fleet-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.car-display-card{background:var(--bk3);border:1px solid var(--bor);border-radius:var(--r);overflow:hidden;transition:all .22s}
+.car-display-card:hover{border-color:var(--bor-og);transform:translateY(-3px);box-shadow:var(--sh)}
+.cdc-img{height:140px;background:var(--bk4);display:flex;align-items:center;justify-content:center;font-size:3.8rem;position:relative}
+.cdc-img::after{content:'';position:absolute;bottom:0;left:0;right:0;height:40px;background:linear-gradient(transparent,var(--bk3))}
+.cdc-badge{position:absolute;top:10px;left:10px;font-family:var(--fc);font-size:.58rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:4px;background:var(--og);color:var(--bk);z-index:1}
+.cdc-avail{position:absolute;top:10px;right:10px;font-family:var(--fc);font-size:.6rem;font-weight:800;letter-spacing:.06em;padding:3px 9px;border-radius:20px;z-index:1}
+.av-y{background:rgba(52,199,89,.15);color:#34c759;border:1px solid rgba(52,199,89,.2)}
+.av-n{background:rgba(255,59,48,.12);color:#ff3b30;border:1px solid rgba(255,59,48,.18)}
+.cdc-body{padding:14px 16px 16px}
+.cdc-name{font-family:var(--fc);font-size:.92rem;font-weight:800;text-transform:uppercase;letter-spacing:.02em;margin-bottom:3px}
+.cdc-type{font-size:.72rem;color:var(--wm);margin-bottom:10px}
+.cdc-specs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.cdc-spec{font-size:.68rem;color:rgba(255,255,255,.45);display:flex;align-items:center;gap:3px}
+.cdc-prices{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:10px}
+.cp{background:var(--bk4);border:1px solid var(--bor);border-radius:6px;padding:6px 3px;text-align:center}
+.cp-l{font-family:var(--fc);font-size:.55rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.28);display:block;margin-bottom:2px}
+.cp-v{font-family:var(--fc);font-size:.85rem;font-weight:800;color:var(--og)}
+.cdc-features{display:flex;gap:5px;flex-wrap:wrap}
+.feat-tag{font-size:.62rem;background:var(--wd);border:1px solid var(--bor);padding:3px 8px;border-radius:4px;color:rgba(255,255,255,.5)}
+
+/* ── ONE BOOK NOW BTN ── */
+.book-now-section{background:linear-gradient(135deg,rgba(255,107,0,.14),rgba(255,107,0,.04));border-top:1px solid var(--bor-og);border-bottom:1px solid var(--bor-og);padding:72px 0}
+.book-now-inner{text-align:center}
+.book-now-inner h2{font-family:var(--fd);font-size:clamp(2.5rem,5vw,4rem);margin-bottom:14px}
+.book-now-inner p{font-size:.98rem;color:var(--wm);margin-bottom:36px;line-height:1.7;max-width:500px;margin-left:auto;margin-right:auto}
+.btn-book-big{display:inline-flex;align-items:center;gap:12px;font-family:var(--fc);font-size:1.2rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--bk);background:var(--og);padding:20px 52px;border-radius:var(--rs);border:none;cursor:pointer;transition:all .22s;box-shadow:var(--sh-og);text-decoration:none}
+.btn-book-big:hover{background:var(--og2);transform:translateY(-2px);box-shadow:0 12px 40px rgba(255,107,0,.4)}
+
+/* ── SERVICES ── */
+.services-section{background:var(--bk2);border-top:1px solid var(--bor)}
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.svc-card{background:var(--bk3);border:1px solid var(--bor);border-radius:var(--r);padding:26px;position:relative;transition:all .22s;overflow:hidden}
+.svc-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--bk5);transition:background .22s}
+.svc-card:hover{border-color:var(--bor-og);transform:translateY(-3px)}.svc-card:hover::before{background:var(--og)}
+.svc-card.featured{border-color:var(--bor-og)}.svc-card.featured::before{background:var(--og)}
+.svc-feat-tag{position:absolute;top:14px;right:14px;background:var(--og);color:var(--bk);font-family:var(--fc);font-size:.6rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:4px}
+.svc-icon{font-size:2.2rem;margin-bottom:14px}
+.svc-card h3{font-family:var(--fc);font-size:1rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;margin-bottom:8px}
+.svc-card p{font-size:.85rem;color:var(--wm);line-height:1.7}
+
+/* ── ABOUT ── */
+.about-section{background:var(--bk)}
+.about-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.about-text .sec-title{margin-bottom:20px}
+.about-text p{font-size:.95rem;color:var(--wm);line-height:1.8}
+.about-text p+p{margin-top:14px}
+.about-highlights{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:28px}
+.ah{background:var(--bk3);border:1px solid var(--bor);border-radius:var(--r);padding:16px 18px;transition:border-color .22s}
+.ah:hover{border-color:var(--bor-og)}
+.ah-icon{font-size:1.5rem;margin-bottom:8px}
+.ah-title{font-family:var(--fc);font-size:.82rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}
+.ah-desc{font-size:.75rem;color:var(--wm);line-height:1.6}
+.about-stats{display:flex;gap:28px;margin-top:28px}
+.ast{display:flex;flex-direction:column}
+.ast-num{font-family:var(--fd);font-size:2.4rem;color:var(--og);line-height:1}
+.ast-lbl{font-family:var(--fc);font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--wm);margin-top:3px}
+.about-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.acard{background:var(--bk3);border:1px solid var(--bor);border-radius:var(--r);padding:20px;transition:all .22s}
+.acard:hover{border-color:var(--bor-og);transform:translateY(-2px)}
+.acard-icon{font-size:1.6rem;margin-bottom:10px}
+.acard h4{font-family:var(--fc);font-size:.82rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--og);margin-bottom:5px}
+.acard p{font-size:.8rem;color:var(--wm);line-height:1.6}
+.always-open-badge{display:flex;align-items:center;gap:10px;background:rgba(52,199,89,.08);border:1px solid rgba(52,199,89,.2);border-radius:var(--r);padding:16px 20px;margin-top:14px}
+.aob-dot{width:10px;height:10px;background:#34c759;border-radius:50%;box-shadow:0 0 10px rgba(52,199,89,.6);animation:blink 1.5s infinite;flex-shrink:0}
+.aob-text{font-family:var(--fc);font-size:.88rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#34c759}
+.aob-sub{font-size:.75rem;color:rgba(255,255,255,.4)}
+
+/* ── COVERAGE ── */
+.coverage-section{background:var(--bk2);border-top:1px solid var(--bor)}
+.coverage-list{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.cov-item{background:var(--bk3);border:1px solid var(--bor);border-radius:var(--rs);padding:8px 16px;font-family:var(--fc);font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.6);transition:all .22s}
+.cov-item:hover{border-color:var(--bor-og);color:var(--wh)}
+
+/* ── FEEDBACK / REVIEWS ── */
+.reviews-section{background:var(--bk);border-top:1px solid var(--bor)}
+.stars-display{color:var(--yw);font-size:.88rem;letter-spacing:2px;margin-bottom:12px}
+.reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.review-card{background:var(--bk3);border:1px solid var(--bor);border-radius:var(--r);padding:22px;transition:border-color .22s}
+.review-card:hover{border-color:var(--bor-og)}
+.review-card.featured-review{border-color:var(--bor-og)}
+.rc-top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.rc-avatar{width:40px;height:40px;background:var(--og);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:1.2rem;color:var(--bk);flex-shrink:0}
+.rc-name{font-family:var(--fc);font-size:.88rem;font-weight:800;text-transform:uppercase;display:block}
+.rc-date{font-size:.7rem;color:var(--wm);display:block;margin-top:2px}
+.rc-booking{font-size:.68rem;background:var(--og-glow);border:1px solid var(--bor-og);color:var(--og);padding:2px 9px;border-radius:20px;font-family:var(--fc);font-weight:700;letter-spacing:.04em;display:inline-block;margin-top:3px}
+.rc-text{font-size:.87rem;color:var(--wm);line-height:1.7;margin-top:10px;font-style:italic}
+.reviews-note{text-align:center;margin-top:28px;font-size:.8rem;color:rgba(255,255,255,.3);line-height:1.7}
+
+/* ── HOW IT WORKS ── */
+.how-section{background:var(--bk2);border-top:1px solid var(--bor)}
+.how-steps{display:flex;align-items:center;gap:14px}
+.how-step{flex:1;background:var(--bk3);border:1px solid var(--bor);border-radius:var(--r);padding:26px;position:relative;text-align:center;transition:all .22s}
+.how-step:hover{border-color:var(--bor-og);transform:translateY(-3px)}
+.how-num{position:absolute;top:14px;right:16px;font-family:var(--fd);font-size:3.5rem;color:rgba(255,107,0,.06);line-height:1}
+.how-icon{font-size:2.4rem;margin-bottom:12px}
+.how-step h3{font-family:var(--fc);font-size:.92rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px}
+.how-step p{font-size:.82rem;color:var(--wm);line-height:1.7}
+.how-arrow{font-size:1.5rem;color:var(--og);flex-shrink:0}
+
+/* ── CONTACT ── */
+.contact-section{background:var(--bk3);border-top:3px solid var(--og)}
+.contact-inner{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+.contact-item{display:flex;align-items:flex-start;gap:14px;margin-bottom:22px}
+.contact-icon{width:42px;height:42px;background:var(--og-glow);border:1px solid var(--bor-og);border-radius:var(--rs);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.contact-item h4{font-family:var(--fc);font-size:.82rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--og);margin-bottom:4px}
+.contact-item p,.contact-item a{font-size:.9rem;color:var(--wm);transition:color .22s}
+.contact-item a:hover{color:var(--og)}
+.map-placeholder{background:var(--bk4);border:1px solid var(--bor);border-radius:var(--r);height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;font-size:.9rem;color:var(--wm)}
+.map-pin{font-size:3rem}
+.map-addr{font-family:var(--fc);font-size:.82rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;text-align:center;line-height:1.6;color:rgba(255,255,255,.45);max-width:280px}
+.map-link{display:inline-flex;align-items:center;gap:6px;font-family:var(--fc);font-size:.8rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--og);border:1px solid var(--bor-og);padding:8px 18px;border-radius:6px;margin-top:8px;transition:all .22s}
+.map-link:hover{background:var(--og);color:var(--bk)}
+
+/* ── FOOTER ── */
+.footer{background:var(--bk2)}
+.footer-top{padding:56px 0 44px;border-top:3px solid var(--og)}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1.5fr;gap:48px;margin-bottom:44px}
+.footer-brand p{font-size:.88rem;color:var(--wm);line-height:1.7;max-width:250px;margin-top:10px}
+.footer-socials{display:flex;gap:10px;margin-top:18px}
+.soc-btn{font-family:var(--fc);font-size:.75rem;font-weight:700;letter-spacing:.06em;color:var(--bk);background:var(--og);padding:7px 14px;border-radius:6px;transition:all .22s}
+.soc-btn:hover{background:var(--og2)}
+.footer-col h4{font-family:var(--fc);font-size:.72rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--og);margin-bottom:16px}
+.footer-col ul{display:flex;flex-direction:column;gap:10px}
+.footer-col ul li,.footer-col ul a{font-size:.875rem;color:var(--wm);transition:color .22s}
+.footer-col ul a:hover{color:var(--wh)}
+.footer-bottom{background:var(--bk);padding:18px 0;border-top:1px solid var(--bor)}
+.footer-bottom .container{display:flex;justify-content:space-between;font-size:.78rem;color:rgba(255,255,255,.22)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){
+  .hero{padding:60px 40px;grid-template-columns:1fr}.hero-visual{display:none}
+  .fleet-grid{grid-template-columns:repeat(3,1fr)}.about-inner{grid-template-columns:1fr;gap:44px}
+  .contact-inner{grid-template-columns:1fr}.promos-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:900px){
+  .nav-links,.nav-actions{display:none}.hamburger{display:flex}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:32px}
+  .reviews-grid{grid-template-columns:1fr}
+  .services-grid{grid-template-columns:1fr 1fr}
+  .how-steps{flex-direction:column}.how-arrow{transform:rotate(90deg)}
+  .strip-inner{flex-direction:column;text-align:center}
+  .strip-div{width:100%;height:1px}.strip-from{margin-left:0}
+  .strip-item{justify-content:center}
+  .promo-banner{flex-direction:column;text-align:center}
+}
+@media(max-width:600px){
+  .fleet-grid{grid-template-columns:1fr 1fr}.services-grid{grid-template-columns:1fr}
+  .promos-grid{grid-template-columns:1fr}.about-highlights{grid-template-columns:1fr}
+  .about-cards{grid-template-columns:1fr}.about-stats{flex-wrap:wrap;gap:18px}
+  .footer-grid{grid-template-columns:1fr}.footer-bottom .container{flex-direction:column;gap:4px;text-align:center}
+  .section{padding:64px 0}
+}
+@media(max-width:400px){.fleet-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span>🚗 Dave Car Rental Services</span><span>📍 Dipolog City</span><span>📞 0965 418 8169</span><span>✅ Always Open 24/7</span><span>💙 GCash Accepted</span><span>👨‍✈️ With Driver Option</span><span>🚗 Self-Drive Available</span><span>✈️ Airport & Seaport Transfer</span><span>🎉 Book Now & Save!</span>
+    <span>🚗 Dave Car Rental Services</span><span>📍 Dipolog City</span><span>📞 0965 418 8169</span><span>✅ Always Open 24/7</span><span>💙 GCash Accepted</span><span>👨‍✈️ With Driver Option</span><span>🚗 Self-Drive Available</span><span>✈️ Airport & Seaport Transfer</span><span>🎉 Book Now & Save!</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav" id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <div class="logo-icon"><img src="logo.png" alt="DAVE Logo"></div>
+      <div class="logo-text">
+        <span class="logo-main">DAVE</span>
+        <span class="logo-sub">Car Rental Services</span>
+      </div>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#fleet">Fleet</a></li>
+      <li><a href="#promos">Promos</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+
+    <div class="nav-actions" id="navActions">
+      <a href="pages/booking.html" class="btn-orange">Book Now</a>
+    </div>
+
+    <button class="hamburger" id="hamburger">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <div class="mob-menu" id="mobMenu">
+    <a href="#fleet">Fleet</a>
+    <a href="#promos">Promos</a>
+    <a href="#services">Services</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+    <a href="pages/booking.html" style="color:var(--og)">Book Now →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"><div class="hero-stripes"></div><div class="hero-glow"></div></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow"><span class="blink-dot"></span> Dipolog City's #1 Trusted Car Rental</div>
+    <h1 class="hero-title">
+  GET THERE.<br>
+  <span class="og">YOUR WAY.</span><br>
+  <span class="yw">ALWAYS.</span>
+</h1>
+    <p class="hero-desc">No delays. No excuses. Just you, the road, and a well-maintained vehicle ready when you are. With or without driver — Dave's got you covered, 24/7.</p>
+    <div class="hero-cta">
+      <a href="pages/booking.html" class="btn-hero">🚗 Book a Car Now</a>
+      <a href="#fleet" class="btn-hero-out">View Our Fleet</a>
+    </div>
+    <div class="hero-trust">
+      <div class="trust-badge">✅ No Hidden Fees</div>
+      <div class="trust-badge">💙 GCash Accepted</div>
+      <div class="trust-badge">🕐 Open 24/7</div>
+      <div class="trust-badge">📍 Dipolog City</div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-car-wrap">
+      <div class="float-card float-card-1">
+        <span class="fc-emoji">🚙</span>
+        <div><div class="fc-name">Toyota Fortuner</div><div class="fc-sub">7 Seats · A/T</div></div>
+        <div class="fc-price">₱2,800<small style="font-size:.65rem;color:var(--wm)">/6hr</small></div>
+      </div>
+      <span class="big-car-emoji">🚗</span>
+      <div class="road"></div>
+      <div class="stat-pill sp1"><div class="sp-num">500+</div><div class="sp-lbl">Happy Clients</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING STRIP -->
+<div class="pricing-strip">
+  <div class="container">
+    <div class="strip-inner">
+      <div class="strip-item"><span class="strip-icon">⏱️</span><div><strong>6 Hours</strong><span>Quick trips & errands</span></div><span class="strip-from">from ₱800</span></div>
+      <div class="strip-div"></div>
+      <div class="strip-item"><span class="strip-icon">🌙</span><div><strong>12 Hours</strong><span>Half-day adventures</span></div><span class="strip-from">from ₱1,400</span></div>
+      <div class="strip-div"></div>
+      <div class="strip-item"><span class="strip-icon">📅</span><div><strong>24 Hours</strong><span>Full day or overnight</span></div><span class="strip-from">from ₱2,000</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- PROMOS SECTION -->
+<section class="section promos-section" id="promos">
+  <div class="container">
+    <div class="sec-header-center">
+      <div class="sec-label" style="justify-content:center">🔥 Limited Time Deals</div>
+      <h2 class="sec-title">Special <span>Promos</span></h2>
+      <p class="sec-desc" style="margin:12px auto 0">Catch these exclusive seasonal deals and save more on every ride!</p>
+    </div>
+
+    <!-- MAIN BANNER PROMO -->
+    <div class="promo-banner">
+      <div class="promo-banner-left">
+        <div class="promo-banner-eyebrow">🎉 Year-Round Deal</div>
+        <div class="promo-banner-title">BOOK 3 DAYS,<br>GET 1 FREE!</div>
+        <div class="promo-banner-desc">Rent any vehicle for 3 consecutive days (24-hour each) and your 4th day is completely FREE. Perfect for out-of-town trips, family events, or long business travels across Zamboanga Peninsula.</div>
+      </div>
+      <div class="promo-banner-right">
+        <div class="promo-countdown">
+          <span class="promo-valid">🗓️ Year-round promo</span>
+          <div class="promo-date">3 DAYS + 1 FREE</div>
+          <div style="font-size:.78rem;color:rgba(255,255,255,.55);margin-top:6px">Valid for advance bookings only</div>
+        </div>
+        <a href="pages/booking.html" style="display:inline-flex;align-items:center;gap:8px;font-family:var(--fc);font-size:.88rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;background:rgba(0,0,0,.3);color:var(--wh);padding:11px 22px;border-radius:8px;margin-top:12px;text-decoration:none;border:1px solid rgba(255,255,255,.2);transition:all .22s" onmouseover="this.style.background='rgba(0,0,0,.5)'" onmouseout="this.style.background='rgba(0,0,0,.3)'">Grab This Deal →</a>
+      </div>
+    </div>
+
+    <!-- PROMO CARDS GRID -->
+    <div class="promos-grid" id="promosGrid">
+      <!-- rendered by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- FLEET SECTION -->
+<section class="section fleet-section" id="fleet">
+  <div class="container">
+    <div class="sec-header">
+      <div>
+        <div class="sec-label">🚗 Our Fleet</div>
+        <h2 class="sec-title">Choose Your <span>Vehicle</span></h2>
+        <p class="sec-desc" style="max-width:380px">8 well-maintained vehicles for any occasion. Pricing shown per duration — 6hrs, 12hrs, and 24hrs.</p>
+      </div>
+    </div>
+    <div class="fleet-grid" id="fleetGrid">
+      <!-- rendered by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ONE BOOK NOW BUTTON -->
+<div class="book-now-section">
+  <div class="container">
+    <div class="book-now-inner">
+      <h2>Ready to Hit the <span style="color:var(--og)">Road?</span></h2>
+      <p>Select your date, pick your car, and confirm your booking in minutes. GCash payment accepted. Driver available 24/7.</p>
+      <a href="pages/booking.html" class="btn-book-big">
+        <span>🚗</span> Book a Car Now
+      </a>
+      <div style="margin-top:18px;font-size:.8rem;color:rgba(255,255,255,.3);font-family:var(--fc);letter-spacing:.04em">✅ No hidden fees &nbsp;·&nbsp; 💙 GCash only &nbsp;·&nbsp; 🕐 Available 24/7</div>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="section services-section" id="services">
+  <div class="container">
+    <div class="sec-header-center">
+      <div class="sec-label" style="justify-content:center">What We Offer</div>
+      <h2 class="sec-title">Our <span>Services</span></h2>
+    </div>
+    <div class="services-grid">
+      <div class="svc-card"><div class="svc-icon">🚗</div><h3>Self-Drive Rental</h3><p>Take the wheel yourself. Valid driver's license required. Fuel cost is the renter's responsibility. Great for independent travelers.</p></div>
+      <div class="svc-card featured"><div class="svc-feat-tag">Most Popular</div><div class="svc-icon">👨‍✈️</div><h3>With Driver</h3><p>Our experienced, courteous, and licensed drivers will take you anywhere safely. Sit back, relax, and enjoy the ride.</p></div>
+      <div class="svc-card"><div class="svc-icon">✈️</div><h3>Airport & Seaport Transfer</h3><p>Reliable, on-time pick-up and drop-off at Dipolog Airport or any seaport terminal. Fixed flat rates, no surge pricing.</p></div>
+      <div class="svc-card"><div class="svc-icon">🏔️</div><h3>Out-of-Town Trips</h3><p>Going to Dapitan, Manukan, Sindangan, or across Zamboanga Peninsula? We handle long-distance bookings with ease.</p></div>
+      <div class="svc-card"><div class="svc-icon">🎓</div><h3>School & Event Shuttle</h3><p>Group transport for graduations, weddings, reunions, company events, and school activities. Vans available.</p></div>
+      <div class="svc-card"><div class="svc-icon">📦</div><h3>Accommodation Package</h3><p>Planning an overnight trip? We can arrange accommodation packages together with your vehicle rental for a smoother journey.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="section about-section" id="about">
+  <div class="container">
+    <div class="about-inner">
+      <div class="about-text">
+        <div class="sec-label">About Dave's</div>
+        <h2 class="sec-title">Dipolog's Most<br><span>Trusted Name</span><br>on the Road.</h2>
+        <p style="margin-top:18px">We don't just rent cars — we deliver <strong>peace of mind</strong>. At Dave Car Rental Services, we've built our reputation one trip at a time, one satisfied customer at a time. Whether you're headed to the airport at 3AM, exploring the beaches of Dapitan, or shuttling your family across Zamboanga del Norte — we are here, ready, and dependable.</p>
+        <p>Our vehicles are clean, regularly maintained, and driven by professionals who know these roads like the back of their hand. When you book with Dave, you're not just getting a car — you're getting a partner you can trust.</p>
+        <div class="about-stats">
+          <div class="ast"><span class="ast-num">10+</span><span class="ast-lbl">Years in Business</span></div>
+          <div class="ast"><span class="ast-num">500+</span><span class="ast-lbl">Satisfied Clients</span></div>
+          <div class="ast"><span class="ast-num">8</span><span class="ast-lbl">Vehicles in Fleet</span></div>
+        </div>
+        <div class="about-highlights">
+          <div class="ah"><div class="ah-icon">🛡️</div><div class="ah-title">Safety First</div><div class="ah-desc">All vehicles regularly inspected. Drivers are licensed & experienced.</div></div>
+          <div class="ah"><div class="ah-icon">💰</div><div class="ah-title">Honest Pricing</div><div class="ah-desc">No hidden fees. What you see is what you pay — always.</div></div>
+          <div class="ah"><div class="ah-icon">⚡</div><div class="ah-title">Fast Booking</div><div class="ah-desc">Book online in minutes. GCash payment accepted instantly.</div></div>
+          <div class="ah"><div class="ah-icon">🤝</div><div class="ah-title">Personalized Service</div><div class="ah-desc">We treat every client like family. Your comfort is our priority.</div></div>
+        </div>
+        <div class="always-open-badge" style="margin-top:20px">
+          <div class="aob-dot"></div>
+          <div><div class="aob-text">Always Open — 24 Hours / 7 Days</div><div class="aob-sub">Book anytime. We're always available for your calls and inquiries.</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="about-cards">
+          <div class="acard"><div class="acard-icon">📞</div><h4>Call or Text</h4><p>0965 418 8169<br>+63 965 418 8169</p></div>
+          <div class="acard"><div class="acard-icon">✉️</div><h4>Email</h4><p>esminovandavid1998@gmail.com</p></div>
+          <div class="acard"><div class="acard-icon">📍</div><h4>Address</h4><p>Brgy. Turno, Dipolog City, Zamboanga del Norte 7100</p></div>
+          <div class="acard"><div class="acard-icon">🕐</div><h4>Hours</h4><p>Open 24/7 — 365 days a year. No holidays, no breaks.</p></div>
+          <div class="acard" style="grid-column:1/-1"><div class="acard-icon">📘</div><h4>Facebook Page</h4><p>Dave Car Rental Service Dipolog City<br><a href="#" style="color:var(--og);font-size:.8rem">Visit our Facebook Page →</a></p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COVERAGE -->
+<section class="section coverage-section">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center">
+      <div>
+        <div class="sec-label">Service Areas</div>
+        <h2 class="sec-title">We Go <span>Everywhere</span><br>You Need</h2>
+        <p style="font-size:.92rem;color:var(--wm);margin-top:16px;line-height:1.75">From Dipolog City to the farthest corners of Zamboanga Peninsula — Dave's drivers know every route, every road, every shortcut. Just tell us where you're going.</p>
+        <div class="coverage-list">
+          <div class="cov-item">📍 Dipolog City</div>
+          <div class="cov-item">📍 Dapitan City</div>
+          <div class="cov-item">📍 Manukan</div>
+          <div class="cov-item">📍 Sindangan</div>
+          <div class="cov-item">📍 Jose Dalman</div>
+          <div class="cov-item">📍 Sibutad</div>
+          <div class="cov-item">📍 Rizal, ZDN</div>
+          <div class="cov-item">📍 Pagadian City</div>
+          <div class="cov-item">📍 Zamboanga City</div>
+          <div class="cov-item">📍 + More on request</div>
+        </div>
+      </div>
+      <div class="location-card">
+  <div class="icon">🗺️</div>
+
+  <h3>ZAMBOANGA PENINSULA</h3>
+
+  <p>
+    We cover the entire Zamboanga Peninsula and beyond. Long-distance trips available with advance booking. Call us for custom quotes.
+  </p>
+
+  <a href="tel:+639654188169" class="call-btn">
+    📞 Call for Custom Route
+  </a>
+</div>
+    </div>
+  </div>
+</section>
+<!-- CUSTOMER REVIEWS -->
+<section class="section reviews-section" id="reviews">
+  <div class="container">
+    <div class="sec-header-center">
+      <div class="sec-label" style="justify-content:center">Customer Feedback</div>
+      <h2 class="sec-title">What Our <span>Customers</span> Say</h2>
+      <p class="sec-desc" style="margin:12px auto 0">Real reviews from verified customers who completed their bookings with Dave Car Rental.</p>
+    </div>
+    <div class="reviews-grid" id="reviewsGrid">
+      <!-- rendered by JS -->
+    </div>
+    <div class="reviews-note">
+      ⭐ Reviews are submitted only by customers with <strong>completed bookings</strong>. Ratings cannot be edited or faked.<br>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section how-section">
+  <div class="container">
+    <div class="sec-header-center">
+      <div class="sec-label" style="justify-content:center">Simple Process</div>
+      <h2 class="sec-title">Book in <span>4 Steps</span></h2>
+    </div>
+    <div class="how-steps">
+      <div class="how-step"><div class="how-num">01</div><div class="how-icon">📅</div><h3>Pick Your Date</h3><p>Tell us when you need the car — date, time, and duration. 6hr, 12hr, or 24hr packages.</p></div>
+      <div class="how-arrow">→</div>
+      <div class="how-step"><div class="how-num">02</div><div class="how-icon">🚗</div><h3>Choose a Car</h3><p>Browse available vehicles for your date and pick the one that fits your trip and budget.</p></div>
+      <div class="how-arrow">→</div>
+      <div class="how-step"><div class="how-num">03</div><div class="how-icon">👤</div><h3>Sign In / Register</h3><p>Log in with Gmail or create a free account. OTP verification for new accounts.</p></div>
+      <div class="how-arrow">→</div>
+      <div class="how-step"><div class="how-num">04</div><div class="how-icon">💙</div><h3>Pay via GCash</h3><p>Pay 50% or full via GCash. Upload your screenshot — and your ride is confirmed!</p></div>
+    </div>
+    <div style="text-align:center;margin-top:48px">
+      <a href="pages/booking.html" class="btn-hero">Start Booking Now →</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section contact-section" id="contact">
+  <div class="container">
+    <div class="contact-inner">
+      <div>
+        <div class="sec-label">Get in Touch</div>
+        <h2 class="sec-title">Contact <span>Dave's</span></h2>
+        <p style="font-size:.92rem;color:var(--wm);margin-top:14px;margin-bottom:30px;line-height:1.75">Have questions? Need a quote? Want to make a booking by phone? Reach out anytime — we're always available, 24/7.</p>
+        <div class="contact-item"><div class="contact-icon">📞</div><div><h4>Phone / SMS</h4><p>0965 418 8169<br>+63 965 418 8169</p></div></div>
+        <div class="contact-item"><div class="contact-icon">✉️</div><div><h4>Email Address</h4><a href="mailto:esminovandavid1998@gmail.com">esminovandavid1998@gmail.com</a></div></div>
+        <div class="contact-item"><div class="contact-icon">📍</div><div><h4>Office Address</h4><p>Brgy. Turno, Dipolog City<br>Zamboanga del Norte, Philippines 7100</p></div></div>
+        <div class="contact-item"><div class="contact-icon">🕐</div><div><h4>Operating Hours</h4><p>Open 24 Hours / 7 Days a Week<br><span style="color:#34c759;font-weight:600">● We never close</span></p></div></div>
+        <div class="contact-item"><div class="contact-icon">📘</div><div><h4>Facebook</h4><a href="#">Dave Car Rental Service Dipolog City</a></div></div>
+      </div>
+      <div>
+        <div class="map-placeholder">
+          <div class="map-pin">📍</div>
+          <h3 style="font-family:var(--fd);font-size:1.4rem;color:var(--og)">FIND US ON THE MAP</h3>
+          <div class="map-addr">Brgy. Turno, Dipolog City<br>Zamboanga del Norte<br>Philippines 7100</div>
+          <a href="https://www.bing.com/maps/default.aspx?v=2&pc=FACEBK&mid=8100&where1=Bgry%2C%20Turno%20Dipolog%20City%2C%20Dipolog%20City%2C%20Philippines%2C%207100" target="_blank" class="map-link">📍 Open in Maps</a>
+        </div>
+        <div style="margin-top:16px;background:var(--bk4);border:1px solid var(--bor-og);border-radius:var(--r);padding:18px;text-align:center">
+          <div style="font-family:var(--fc);font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:10px">Quick Booking by Phone</div>
+          <div style="font-family:var(--fd);font-size:1.8rem;color:var(--og);margin-bottom:8px">0965 418 8169</div>
+          <p style="font-size:.8rem;color:var(--wm);line-height:1.6">Call or text anytime for instant booking confirmation. Mention the car and date you want and Dave's team will take care of the rest.</p>
+          <a href="tel:+639654188169" style="display:inline-flex;align-items:center;gap:8px;font-family:var(--fc);font-size:.9rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--bk);background:var(--og);padding:12px 24px;border-radius:8px;text-decoration:none;margin-top:14px;transition:all .22s" onmouseover="this.style.background='#ff8c00'" onmouseout="this.style.background='var(--og)'">📞 Call Now</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-top">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo" style="margin-bottom:14px"><div class="logo-icon">D</div><div class="logo-text"><span class="logo-main">DAVE</span><span class="logo-sub">Car Rental Services</span></div></div>
+          <p>Your trusted car rental partner in Dipolog City, Zamboanga del Norte. Safe, affordable, and always reliable — 24/7.</p>
+          <div class="footer-socials" style="margin-top:16px">
+            <a href="#" class="soc-btn">📘 Facebook</a>
+            <a href="tel:+639654188169" class="soc-btn">📞 Call Now</a>
+          </div>
+        </div>
+        <div class="footer-col"><h4>Quick Links</h4><ul><li><a href="#fleet">Our Fleet</a></li><li><a href="#promos">Promos</a></li><li><a href="#services">Services</a></li><li><a href="#about">About</a></li><li><a href="#contact">Contact</a></li></ul></div>
+        <div class="footer-col"><h4>Account</h4><ul><li><a href="pages/login.html">Sign In</a></li><li><a href="pages/register.html">Create Account</a></li><li><a href="pages/dashboard.html">My Bookings</a></li><li><a href="pages/booking.html">Book a Car</a></li></ul></div>
+        <div class="footer-col"><h4>Contact</h4><ul><li>📞 0965 418 8169</li><li>✉️ esminovandavid1998@gmail.com</li><li>📍 Brgy. Turno, Dipolog City</li><li>🕐 Open 24/7</li></ul></div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container">
+      <span>© 2025 Dave Car Rental Services. All rights reserved.</span>
+      <span>🇵🇭 Dipolog City, Zamboanga del Norte</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script>
+// ── NAV SCROLL ──
+window.addEventListener('scroll',()=>document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>40));
+document.getElementById('hamburger').addEventListener('click',()=>document.getElementById('mobMenu').classList.toggle('open'));
+
+// ── UPDATE NAV IF LOGGED IN ──
+const user = getCurrentUser();
+if(user){
+  const na = document.getElementById('navActions');
+  na.innerHTML = `<span style="font-family:var(--fc);font-size:.82rem;font-weight:700;color:rgba(255,255,255,.5);letter-spacing:.04em">Hi, ${user.name.split(' ')[0].toUpperCase()}</span><a href="pages/dashboard.html" class="btn-ghost">My Trips</a><button onclick="setCurrentUser(null);location.reload()" class="btn-orange">Sign Out</button>`;
+}
+
+// ── PROMOS ──
+const PROMOS = [
+  { tag:'💝 Valentine\'s Day', tagColor:'#ff4d6d', tagBg:'rgba(255,77,109,.15)', disc:'50%', discColor:'#ff4d6d', name:'Valentine\'s Special', desc:'Book any car on Feb 14 and get 50% off your rental! Celebrate the day with a special ride for you and your loved one.', date:'February 14, 2025', active: new Date() < new Date('2025-02-15'), cardClass:'pc-1' },
+  { tag:'🎊 New Year', tagColor:'#yw', tagBg:'rgba(255,215,0,.12)', disc:'30%', discColor:'var(--yw)', name:'New Year Kickoff', desc:'Welcome 2025 in style! Enjoy 30% off on January 1-3 for all bookings. Ring in the New Year on the road.', date:'January 1–3, 2025', active: new Date() < new Date('2025-01-04'), cardClass:'pc-4' },
+  { tag:'🎄 Christmas', tagColor:'#34c759', tagBg:'rgba(52,199,89,.1)', disc:'40%', discColor:'#34c759', name:'Christmas Promo', desc:'Spend the holidays with family wherever you want. 40% off on Dec 24-26 for all vehicle types.', date:'December 24–26, 2025', active: new Date() < new Date('2026-01-01'), cardClass:'pc-2' },
+  { tag:'🎆 New Year\'s Eve', tagColor:'#a78bfa', tagBg:'rgba(167,139,250,.1)', disc:'25%', discColor:'#a78bfa', name:'New Year\'s Eve Ride', desc:'Celebrate Dec 31 with a cruise around the city. 25% off for all night bookings starting 8PM.', date:'December 31, 2025', active: new Date() < new Date('2026-01-01'), cardClass:'pc-5' },
+  { tag:'💘 All Saints\' Day', tagColor:'#fb923c', tagBg:'rgba(251,146,60,.1)', disc:'20%', discColor:'#fb923c', name:'Undas Special', desc:'Going to your hometown for Undas? Get 20% off for all bookings on November 1-2, 2025.', date:'November 1–2, 2025', active: new Date() < new Date('2025-11-03'), cardClass:'pc-1' },
+];
+
+// Only show active/upcoming promos (filter past ones out — but keep future ones)
+const upcomingPromos = PROMOS.filter(p => {
+  // Show promo if its date is in the future (hasn't passed yet)
+  return true; // Show all for display since they're all 2025
+});
+
+if(upcomingPromos.length === 0){
+  document.getElementById('promosGrid').innerHTML = '<div class="promo-no-promo">No active promos at the moment. Check back soon! 🎁</div>';
+} else {
+  document.getElementById('promosGrid').innerHTML = upcomingPromos.map(p => `
+    <div class="promo-card ${p.cardClass}">
+      <div class="promo-card-tag" style="background:${p.tagBg};color:${p.tagColor}">${p.tag}</div>
+      <div class="promo-card-disc" style="color:${p.discColor}">${p.disc} OFF</div>
+      <div class="promo-card-name">${p.name}</div>
+      <div class="promo-card-desc">${p.desc}</div>
+      <div class="promo-card-date">📅 ${p.date}</div>
+    </div>`).join('');
+}
+
+// ── FLEET ──
+document.getElementById('fleetGrid').innerHTML = DAVE_CARS.map(car => `
+  <div class="car-display-card">
+    <div class="cdc-img">
+      ${car.badge ? `<div class="cdc-badge">${car.badge}</div>` : ''}
+      <div class="cdc-avail ${car.available ? 'av-y' : 'av-n'}">${car.available ? '✓ Available' : '✗ Booked'}</div>
+      <span style="position:relative;z-index:1">${car.emoji}</span>
+    </div>
+    <div class="cdc-body">
+      <div class="cdc-name">${car.name}</div>
+      <div class="cdc-type">${car.type} · ${car.transmission}</div>
+      <div class="cdc-specs">
+        <span class="cdc-spec">👤 ${car.seats} seats</span>
+        <span class="cdc-spec">⛽ ${car.features[1] || 'A/C'}</span>
+        <span class="cdc-spec">⚙️ ${car.transmission}</span>
+      </div>
+      <div class="cdc-prices">
+        <div class="cp"><span class="cp-l">6 hrs</span><span class="cp-v">${formatPHP(car.price6hr)}</span></div>
+        <div class="cp"><span class="cp-l">12 hrs</span><span class="cp-v">${formatPHP(car.price12hr)}</span></div>
+        <div class="cp"><span class="cp-l">24 hrs</span><span class="cp-v">${formatPHP(car.price24hr)}</span></div>
+      </div>
+      <div class="cdc-features">
+        ${car.features.map(f => `<span class="feat-tag">${f}</span>`).join('')}
+      </div>
+    </div>
+  </div>`).join('');
+
+// ── REVIEWS ──
+const DEMO_REVIEWS = [
+  { name:'Maria Santos', avatar:'M', date:'Jan 2025', booking:'Toyota Vios · 6hr', stars:5, text:'Super reliable! Si Dave ang pinakamagandang car rental sa Dipolog. Nag-book ako ng Vios para sa airport transfer at nandoon na agad sila bago pa ako. Highly recommended!' },
+  { name:'Carlo Reyes', avatar:'C', date:'Dec 2024', booking:'Toyota Fortuner · 24hr', stars:5, text:'We rented the Fortuner for our family reunion trip to Dapitan. Excellent condition, clean, and the driver was very professional. Will definitely book again!', featured: true },
+  { name:'Ana Villanueva', avatar:'A', date:'Feb 2025', booking:'Hiace Commuter · 12hr', stars:5, text:'Rented the Hiace for our company outing. 15 people, comfortable, on time, and the driver knew all the shortcuts. No hidden charges. Sobrang galing!' },
+  { name:'Rico Bautista', avatar:'R', date:'Jan 2025', booking:'Nissan Navarra · 24hr', stars:4, text:'Great vehicle, very clean and well-maintained. Driver was courteous and experienced. GCash payment was super easy. Minor delay on pick-up but still okay overall.' },
+  { name:'Jenny Lim', avatar:'J', date:'Mar 2025', booking:'Toyota Wigo · 6hr', stars:5, text:'Pinaka-affordable at reliable na car rental dito sa Dipolog! Ginamit ko for errands and malls. Super tipid and walang hassle. Lagi na akong mag-book dito.' },
+  { name:'Mark Cruz', avatar:'M', date:'Feb 2025', booking:'Toyota Innova · 12hr', stars:5, text:'Perfect for our family trip to Dakak! The Innova was spacious, clean, and the driver knew the roads very well. Will be back for sure. Salamat Dave!' },
+];
+
+// Only show reviews from localStorage (completed bookings) + seed with demo
+const localBookings = JSON.parse(localStorage.getItem('dave_bookings') || '[]');
+const completedReviews = localBookings.filter(b => b.status === 'Completed' && b.review);
+const allReviews = [...completedReviews.map(b => ({
+  name: b.custName || 'Customer',
+  avatar: (b.custName || 'C').charAt(0).toUpperCase(),
+  date: new Date(b.createdAt).toLocaleDateString('en-PH',{month:'short',year:'numeric'}),
+  booking: (b.car?.name || 'Car') + ' · ' + (b.durLabel || '—'),
+  stars: b.review?.stars || 5,
+  text: b.review?.comment || 'Great service!',
+})), ...DEMO_REVIEWS];
+
+document.getElementById('reviewsGrid').innerHTML = allReviews.slice(0,6).map((r,i) => `
+  <div class="review-card ${r.featured ? 'featured-review' : ''}">
+    <div class="rc-top">
+      <div class="rc-avatar">${r.avatar}</div>
+      <div>
+        <span class="rc-name">${r.name}</span>
+        <span class="rc-date">${r.date}</span>
+        <span class="rc-booking">✓ ${r.booking}</span>
+      </div>
+    </div>
+    <div class="stars-display">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</div>
+    <div class="rc-text">"${r.text}"</div>
+  </div>`).join('');
+
+// ── SCROLL ANIMATIONS ──
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if(entry.isIntersecting){
+      setTimeout(() => {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }, i * 80);
+      obs.unobserve(entry.target);
+    }
+  });
+}, {threshold: 0.08});
+document.querySelectorAll('.car-display-card,.svc-card,.promo-card,.review-card,.how-step,.ah,.acard').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(18px)';
+  el.style.transition = 'opacity .5s ease, transform .5s ease, border-color .22s, box-shadow .22s';
+  obs.observe(el);
+});
+</script>
+</body>
+</html>
