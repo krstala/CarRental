@@ -479,7 +479,7 @@ img{max-width:100%;display:block}input,textarea,select{outline:none;font-family:
 <script>
 // ── AUTH ──
 const staffUser = JSON.parse(sessionStorage.getItem('dave_staff_user') || localStorage.getItem('dave_admin_session') || 'null');
-if (!staffUser || staffUser.role !== 'driver') { window.location.href = 'Adminlogin.html'; }
+if (!staffUser || staffUser.role !== 'driver') { window.location.href = 'adminlogin.html'; }
 
 // ── LOAD EMPLOYEE RECORD ──
 const allEmployees = () => JSON.parse(localStorage.getItem('dave_employees') || '[]');
